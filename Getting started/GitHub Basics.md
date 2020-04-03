@@ -12,7 +12,7 @@ All of the tutorials and pipelines will be posted on this page in the repositori
 GitHub also allows you to raise issues for anything you need help with. This is one of the main reasons we are using GitHub, for the interaction it allows between us. 
 To do this, go into the repository that you are having a problem with and click on the issues tab
 
-![Issuestab](https://github.com/Genomics-CRT/images/blob/master/Screenshot%20from%202020-04-02%2013-45-29.png)
+![Issuestab](https://github.com/Genomics-CRT/images/blob/master/issuestab.png)
 
 
 Once in the issues tab, click on the labels button and select which filter applies to your issue. An example of a label will be “Help wanted”. 
