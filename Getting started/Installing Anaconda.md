@@ -19,7 +19,7 @@ Python comes pre-installed with Anaconda but the other commonly used programming
 We will walk you through installing R and R-studio in the next section.
 
 
-## Installing R
+## Installing R and R-Studio
 
 R is a very useful programming language for dealing with statistics and visualisations of datasets and has many packages which are commonly used by bioinformaticians. We first need to install the R language onto our computers and then install R-Studio which is an integrated development environment (IDE) for R. You will see the term IDE used quite a lot in data science, it is simply a computer program which makes it easier to work with programming languages.
 
