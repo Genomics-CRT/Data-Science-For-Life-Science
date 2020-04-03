@@ -1,0 +1,17 @@
+markdown header
+
+
+Let’s start with the basic syntax for mathematical calculations in R. R performs addition, subtraction, multiplication, and division with `*` `-` `+` & `/`.
+
+An example is given below:
+
+```R
+# Results in "500"
+573 - 74 + 1
+
+# Results in "50"
+25 * 2
+
+# Results in "2"
+10 / 5
+```
