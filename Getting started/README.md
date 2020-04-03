@@ -1,5 +1,5 @@
-# Genomics CRT outreach program topics
-This document contains a breakdown of the topics covered in the workshop. As the outreach program is in its infancy, the materials will be generated and diseminated on a week to week basis. Thus, folders for topics in the outline may not be instantly available. 
+# Introduction
+This document contains a breakdown of the topics covered in the workshop. Materials will be generated and diseminated on a week to week basis. Thus, folders for topics in the outline may not be instantly available.
 
 #### Week 1
 ###### Installing Dependencies
