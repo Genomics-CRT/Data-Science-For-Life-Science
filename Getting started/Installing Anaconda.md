@@ -35,7 +35,7 @@ Once in the terminal type the following command:
 Anaconda will then install all of the libraries, this may take some time.
 Next, install R-Studio using the following command in the terminal:
 
-`conda install -c r rstudio –yes`
+`conda install -c r rstudio --yes`
 
 R-Studio will now be installed.
 
@@ -47,14 +47,14 @@ Search for Anaconda Prompt on your system, this is a built in terminal for Windo
 
 Type the following command into the command line:
 
-`conda install r-essentials –yes`
+`conda install r-essentials`
 
 You will be asked to proceed Y/N
 Type Y and hit enter, installation of R and various packages will begin, this may take some time to complete. Next step is to install R-Studio
 
 In the command line, type in:
 
-`conda install -c r rstudio –yes`
+`conda install -c r rstudio`
 
 You will be asked to proceed, type Y and hit enter.
 R-studio will now be installed.
