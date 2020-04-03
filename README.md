@@ -31,7 +31,7 @@ Once in the issues tab, click on the labels button and select which filter appli
 
 Once this is done, click on New issue. This will take you to a page where you can add a title to your issue and describe exactly what is happening, then a member of the CRT will be able to help you through the problem.
 
-![issuesform](linktogohere)
+![issuesform](https://github.com/Genomics-CRT/images/blob/master/Screenshot%20from%202020-04-02%2013-43-39.png)
 
 That’s the basics of GitHub, feel free to explore the rest of the functions and visit other pages.
 
