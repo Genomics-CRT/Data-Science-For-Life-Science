@@ -322,3 +322,97 @@ Essentially, the ! operator will either take a true value and pass back false, o
 
 Logical operators are often used in conditional statements to add another layer of logic to our code.
 
+# Functions
+Functions are actions we can perform. R provides a number of functions, and you have been using them 'under the hood'. 
+
+We call, or use, these functions by stating the name of the function and following it with an opening and closing
+parentheses: ie. functionName(). In addition, between the parenthesis, we usually pass in an argument, or a value that 
+the function uses to conduct an action, i.e. functionName(value).
+
+Does that syntax look a little familiar? When we have used print() we’re calling the print function. When we made a vector,
+we actually used the combine c() function! Let’s see print() and some real functions in action!
+
+```R
+sort(c(2,4,10,5,1)); # Outputs c(1,2,4,5,10)
+length(c(2,4,10,5,1)); # Outputs 5
+sum(5,15,10) #Outputs 30
+```
+Let’s look at each of the lines above:
+
+* On the first line, the sort() function is called with a parameter of the vector c(2,4,10,5,1). The result is a sorted vector c(1,2,4,5,10) with the values in ascending order.
+* On the second line, we called a function we’ve seen before: length() and it returned the value 5 because there were five items in the vector.
+* On the third line, we called a function sum() which added up all of the arguments we passed to it.
+
+Understanding how to call a function and what arguments it needs is a fundamental part of leveraging R as a tool to conduct
+analysis. **To view the documentation of a function, type the function and hit F1 to render the docs in the bottom right 
+window of R Studio**. 
+
+Example of the unique function:
+```R
+values <- c(2,6,2,5,8,7,2,6,7,9,11)
+
+unique(values) #prints output to stdout
+
+# assign it to a variable for further use
+
+unique_val <- unique(values)
+
+print(unique_val)
+```
+
+# Importing Packages
+
+R’s popularity is also largely due to the many fantastic packages available in the language! 
+A package is a bundle of code that makes coding certain tasks easier. 
+There are all sorts of packages for all sorts of purposes, ranging from visualizing and cleaning data, 
+to ordering pizza or posting a tweet. In fact, most R-grammers (R programmers) use packages when they code. 
+This is why you might hear them differentiate packages from “Base R.” Base R refers the R language by itself and 
+all that it can do without importing any packages.
+
+Base R is very powerful, but most of the time, you’ll want to import a package to make your life easier. 
+You only need to run this command the first time you install a package, after that there is no need to run it:
+
+```
+install.packages('package-name')
+```
+
+To import a package you simply:
+```
+library(package-name)
+```
+
+You can look up documentation for different packages available in R at the CRAN (Comprehensive R Archive Network).
+
+In this lesson, we coded in Base R but let’s practice importing one of the most popular R packages: dplyr. 
+
+```R
+install.packages("dplyr")
+library(dplyr)
+```
+
+**Note: A common error you will come across when installing packages is "package does not exist". The package you
+are trying to install will most likely be in Bioconductor**.
+
+An example of a package on bioconductor is `fgsea`. The tool itself is not important for these excercises. Practice
+downloading and installing `fgsea` via biocinductor by googling "fgsea", or visit the package site [here](https://bioconductor.org/packages/release/bioc/html/fgsea.html).
+Bioconductor packages contain a code snippet you can copy and paste to complete the download: 
+
+```R
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("fgsea")
+```
+
+# Summary 
+
+Here’s a summary of some of the concepts you’ve learned:
+
+* R is a powerful statistical programming language with a large community of data enthusiasts.
+* You can calculate arithmetic with R and it will follow the normal order of operations
+* Data types allow us to classify different pieces of information.
+* You can store that information inside of variables
+* You can use conditional statements and operators to introduce logic to your code
+* You can call a function in R by using the () and passing in the correct arguments
+* R programmers have published lots of useful packages that specialize in different tasks, which are all available for you to use in your programs after you install them.
+
