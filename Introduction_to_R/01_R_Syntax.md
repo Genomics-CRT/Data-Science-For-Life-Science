@@ -1,8 +1,3 @@
----
-title: "Introduction to R Syntax"
-output: html_notebook
----
-
 # Calculations
 Let’s start with the basic syntax for mathematical calculations in R. R performs addition, subtraction, multiplication
 and division with `*` `-` `+` `/`.
