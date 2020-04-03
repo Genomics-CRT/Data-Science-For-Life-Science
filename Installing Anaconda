@@ -1,4 +1,4 @@
-#Installing Anaconda
+# Installing Anaconda
 
 Anaconda is a package manager, this simply means that it allows users to create environments on their computer 
 which contains the software required to do data science. 
