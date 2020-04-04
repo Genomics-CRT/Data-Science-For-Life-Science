@@ -107,6 +107,7 @@ After we greet the user, we want to wish them goodbye. We then update message_st
 message and print that out.
 
 **Note**: You can also use = instead of <- to assign a value. However popular nomenclature dictates the use of `<-`. 
+
 **Note**: In R, you can type `alt` + `-` to produce a `<-`. This is convenient as it also inserts spaces before and after the `<-` automatically. 
 
 # Viewing Variables
