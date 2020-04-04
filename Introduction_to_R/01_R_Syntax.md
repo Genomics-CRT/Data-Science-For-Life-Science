@@ -43,7 +43,7 @@ for(i in seq(1:10)){
 Now when we add a comment to the line `i <- i +2`, the for loop prints each number from 1-10:
 ```R
 for(i in seq(1:10)){
-  i <- i + 2
+#  i <- i + 2
   print(i)
 }
 
