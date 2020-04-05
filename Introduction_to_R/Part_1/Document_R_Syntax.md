@@ -1,5 +1,5 @@
 # Calculations
-Let’s start with the basic syntax for mathematical calculations in R. R performs addition, subtraction, multiplication, division, exponentiation and modulo with `*` `-` `+` `/` `^` `%`.
+Let’s start with the basic syntax for mathematical calculations in R. R performs addition, subtraction, multiplication, division, exponentiation and modulo with `*` `-` `+` `/` `^` `%%`.
 
 An example is given below:
 
