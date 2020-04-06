@@ -18,12 +18,13 @@ Mathematical operations in R follow the standard mathematical order of operation
 
 # Comments
 Text written in a program but not run by the computer is called a comment. R interprets anything after a `#` as a comment.
-It is good practice to add comments to your code so When you revisit the code months down the road, you will understand exactly what the code was designed for. 
+It is good practice to add comments to your code so When you revisit the code months down the road, you will understand exactly what the code was designed for:
 
 Furthermore, comments can be placed in code blocks to 'deactivate' that line of code. The following code block uses a for loop to generate numbers from 1 - 10 stored as the variable `i`. For each number in the sequence, 2 is added `i <- i + 2`, resulting in the output:
 ```R
-for(i in seq(1:10)){
-  i <- i + 2
+# Comments can be added here 
+for(i in seq(1:10)){ 
+  i <- i + 2  # Adding a comment here will not deactivate the line of code
   print(i)
 }
 
@@ -39,7 +40,7 @@ for(i in seq(1:10)){
 [1] 12
 ```
 
-Now when we add a comment to the line `i <- i +2`, the for loop prints each number from 1-10:
+Now when we add a comment before code at start of line 2, the line is deactivated and the loop no longer adds 2 to `i`:
 ```R
 for(i in seq(1:10)){
 #  i <- i + 2
@@ -115,14 +116,14 @@ that can save time by using the GUI instead of typing `class()` or `typeof()`. H
 on a computing cluster) the GUI will not be accessible to you. 
 
 # Vectors
-As mentioned in Data Types,  vectors are a list-like structure that contain items of the same data type.
+As mentioned in Data Types,  vectors are a list-like structure that contain items of the same data type. 
 
 An example of a character vector:
 ```R
 spring_months <- c("March", "April","May","June")
 ```
 
-In the example above, we created a new variable with the value of a new vector. We created this vector by separating four character strings with a comma and wrapping them inside c().
+In the example above, we created a new variable with the value of a new vector. We created this vector by separating four character strings with a comma and wrapping them inside c(). It is a character vector. 
 
 A few things you should know how to do with vectors:
 
@@ -130,9 +131,28 @@ A few things you should know how to do with vectors:
 * You can check the length of a vector by using `length(vector_name)`
 * You can access individual elements in the vector by using `[]` and placing the element position inside the brackets. For example, if we wanted to access the second element we would write: `vector_name[2]`. 
   
-**Note: In R, you start counting elements at position one, not zero.**
+**Note: In R, you start counting elements at position one, not zero!**
 
-To illustrate the above points, lets look at the for loop we used earlier. 
+```R
+spring_months[1]
+"March"
+```
+
+We can join two vectors together using the `c()` function in R:
+```R
+vector <- c(1,2,3,4,5)
+vector_2 <- c(6,7,8,9,10)
+
+x <- c(vector, vector_2)
+
+print(x)
+
+[1] 1 2 3 4 5 6 7 8 9 10
+```
+
+
+
+To illustrate the rules regarding data types in vectors, lets first run the for loop from earlier:
 ```R
 # create for loop to print i
 for(i in seq(1:10)){
@@ -141,23 +161,17 @@ for(i in seq(1:10)){
 }
 ```
 
-Run the above code block. You will see `i` stored as a variable in the environment window with a value of 12. (the value of i is the last iteration of the loop, i.e 10 + 2) 
+You will see `i` stored as a variable in the environment window with a value of 12. (the value of i is the last iteration of the loop, i.e 10 + 2) 
 
-Now observe what happens when creating a vector:
+Now observe what happens when mixing variables, characters and numerics in a vector:
 ```R
-# Character vector
-char <- c("delta", "alpha", "gamma")
-
-# Numeric vector
-numer <- c(1, 5, 2, 9, 2)
-
-# Look in the environment window. The prefix chr & num are character and numeric, respectively. 
-
 # Lets see what happens mixing data types in a vector. 
 # For this we will use a character "", numeric and the variable i (with value 12).
 
 tester <- c(i, 55) 
 # num[1:2] 12, 55
+# expected behaviour, i is a variable storing the numeric 12
+
 
 tester_1 <- c(55, i, "epsilon") 
 # chr[1:3] "55", "12", "epsilon"
@@ -169,13 +183,14 @@ converted every other data type in the vector to a character.
 # Conditionals
 In R, we will often perform a task based on a condition. This is also known as control flow, where the user can introduce conditional statements to activate sections of code.
 
-We can perform a task based on a condition using an if statement. The code below will print `'This message will print!'` because the conditonal statement `if` is set to `TRUE`.
+We can perform a task based on a condition using an `if` statement. The code below will print `'This message will print!'` because the conditonal statement `if` is set to `TRUE`.
 ```R
 if (TRUE) {
   print('This message will print!')
 } 
 ```
-Notice in the example above, we have an `if` statement. The `if` statement is composed of:
+
+The `if` statement is composed of:
 
 * The `if` keyword followed by a set of parentheses `()` which is followed by a code block or block statement, indicated by a set of curly braces `{}`.
 * Inside the parentheses `()`, a condition is provided that evaluates to `TRUE` or `FALSE`.
@@ -227,8 +242,8 @@ if(value == 10){
   print("incorrect value")
 }
 ```
-Below is another example of a `for loop` (you will learn about these later), an `if` and an `else` statement. Briefly, the for loop iterates over each value in the `num_vec` and runs it through the `if...else` code block. 
-This code also shows you how to append items to an empty vector (`above_5` and `below_5`, respectively)
+
+Below is another example of a `for loop` (you will learn about these later), an `if` and an `else` statement. Briefly, the for loop iterates over each value in the `num_vec` and runs it through the `if...else` code block. Using vector concatenation from the previous topic on vectors, we can append items that are returned by the `if...else` logic to `above_5` and `below_5` respectively. 
 
 ```R
 num_vec <- c(1,4,2,6,8,9,9,4,3,2)
@@ -348,6 +363,76 @@ unique_val <- unique(values)
 
 print(unique_val)
 ```
+
+# For Loops
+Numerous examples of for loops have been utilised already in this document. A for loop begins by using the `for` statement, followed by open brackets `()`. Inside the brackets, you can assign a variable name that will be used in the code block, which is wrapped in curly braces `{}`.
+
+Lets use for loops to introduce some other concepts in R, building the code up step by step:
+```R
+gene_A <- c(2, 0, 4, 40, 50, 66)
+
+for(gene_exp in gene_A){
+  print(gene_exp)
+  }
+
+# output:
+[1] 2
+[1] 0
+[1] 4
+[1] 40
+[1] 50
+[1] 66
+```
+
+Lets add some text before printing the variable. To do this in R, we use the `paste0` function which allows you to print strings along with variable values. The `paste0()` function must be wrapped in the `print()` function, with the quotes text followed by a comma:
+```R
+for(gene_exp in gene_A){
+  print(paste0("Gene A expression values: ", gene_exp))
+}
+
+# output:
+[1] "Gene A expression values: 2"
+[1] "Gene A expression values: 0"
+[1] "Gene A expression values: 4"
+[1] "Gene A expression values: 40"
+[1] "Gene A expression values: 50"
+[1] "Gene A expression values: 66"
+```
+
+Lets assume the vector of gene expression values for gene A come from 6 samples. We are going to assign sample numbers in an incremental fashion:
+```R
+i = 0
+
+for(gene_exp in gene_A){
+  i <- i + 1
+  print(paste0("Gene A expression value in sample ", i, ": ", gene_exp))
+}
+
+# output 
+[1] "Gene A expression value in sample 1: 2"
+[1] "Gene A expression value in sample 2: 0"
+[1] "Gene A expression value in sample 3: 4"
+[1] "Gene A expression value in sample 4: 40"
+[1] "Gene A expression value in sample 5: 50"
+[1] "Gene A expression value in sample 6: 66"
+```
+
+In the above code we set `i <- 0` and used it as an index. For each iteration of the for loop, we tell it to increase `i` by 1 `i <- i + 1`. Hopefully the above examples have given a clear idea of what for loops are capable of. 
+
+# While Loops
+In contrast to for loops which iterate over an existing objects until every item has been visited, while loops will operate over items -- but only whilst a condition is `TRUE`. That is to say, until the condition is no longer satisfied. You will need to make use of the conditional statements covered earlier in a while loop:
+```R
+i <- 1
+
+while (i <=6) {
+  print(i*i)
+  i = i+1
+}
+```
+
+In the code above, we tell R to print `i*i` or `i` multiplied by `i`, and then to add 1 to `i` to increment its value.
+
+**Note: if we do not increment i by 1, then i will never reach 6 and the condition will never be satisfied. This will cause an infinite loop and depending on your laptop, may crash R**. 
 
 # Importing Packages
 R’s popularity is also largely due to the many fantastic packages available in the language!  A package is a bundle of code that makes coding certain tasks easier.  There are all sorts of packages for all sorts of purposes, ranging from visualizing and cleaning data, to ordering pizza or posting a tweet. This is why you might hear them differentiate packages from “`Base R`.” `Base R` refers the R language by itself and  all that it can do without importing any packages.
