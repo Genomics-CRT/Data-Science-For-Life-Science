@@ -140,6 +140,9 @@ for date in listOfDates:
     #repeat until every value in dates has been used up, the for loop will then end.
     
 ```
+For loops can be challenging to understand without a visualisation of the steps that are occuring.
+This website http://www.pythontutor.com/visualize.html#mode=edit shows you what line of code is executing and the output that it generates. It can be useful to put your code here and run the visualisation to understand things a bit better.
+
 
 This for loop is useful but how can we use a single for loop to loop over multiple lists?  
 Instead of initiating the loop using the list, we can use the indexing we learned earlier and some new functions which can create sequences of numbers.
