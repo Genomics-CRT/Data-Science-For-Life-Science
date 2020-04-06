@@ -110,5 +110,5 @@ Indentation can be a tab character or four spaces. The image below gives an exam
 
 The final print command at the bottom of the code will only be printed once because it is not indented into the same group (code block) as the others. 
 
-[Indentation](https://github.com/Genomics-CRT/images/blob/master/Indentation.png)
+![Indentation](https://github.com/Genomics-CRT/images/blob/master/Indentation.png)
 
