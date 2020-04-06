@@ -4,7 +4,7 @@
 ## Strings
 Strings are simply characters surrounded by `'` or `"` quotes
 For example, `myString = 'This is a string'`.
-The `print()` function is used to show the output of strings
+The `print()` function can be used to show the output of strings
 
 Strings can be joined together using the `+` operator
 
