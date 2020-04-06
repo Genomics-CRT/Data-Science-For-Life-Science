@@ -22,6 +22,8 @@ I have labelled a few of the important areas in the IDE.
 If you want to run the whole script you have written in the editor, press F5.
 If you want to run a single code line or a highlighted portion of lines, press F9
 
+When following these tutorials please have Spyder open and type the code as you are reading it, the only way to get good at coding is to code. Reading books does not make you a good writer, it is the same with coding.
+
 ## Resources to help with coding
 A large part of your time spent coding will be reading through package documentation and on websites which specialise in solving coding problems. The main websites which you should search when you encounter a problem are www.stackoverflow.com and www.biostars.com 
 
