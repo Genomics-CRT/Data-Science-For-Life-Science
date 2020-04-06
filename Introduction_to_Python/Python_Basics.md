@@ -64,6 +64,7 @@ Comments can be added to your python code by placing `#` before what you type.
 It is good practice to comment your code so that others, and yourself, can understand what your  
 thought process was when you were writing the code. This allows easy understanding, and editing, of the code in the future.
 
+
 ## Data types
 
 The type of data you are dealing with will influence which functions or methods you can use on it
