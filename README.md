@@ -4,7 +4,7 @@ The Science Foundation Ireland (SFI) funded Centre for Research Training (CRT) i
 # Workshop Outline
 The workshop will follow this schedule for the duration of the course:
 * **Monday**: A markdown file containing materials on the topics covered. These are essentially textbook style markdown documents that have code examples inline. 
-* **Monday**: A R markdown / .ipynb file worksheet. This is a file you can download and open in R Studio and Jupyter notebook respectively. It will contain exercises for participants to complete based on the materials file released on the same day. 
+* **Monday**: A R markdown / python file worksheet. This is a file you can download and open in R Studio and Jupyter notebook respectively. It will contain exercises for participants to complete based on the materials file released on the same day. 
 * **Thursday**: Zoom meeting. Course coordinators will participate in a conference call where they will share their screen with participants, and walk through the worksheets provided on Monday.
 * **Thursday**: Solutions to the worksheet are provided after the zoom meeting to those who could not attend. 
 
