@@ -1,31 +1,56 @@
 # Data-Science-For-Life-Science
+The Science Foundation Ireland (SFI) funded Centre for Research Training (CRT) in Genomics Data Science PhD programme currently has 15 participating students, this is expected to grow by approximately 25 students each year for the next three years. As part of the SFI funding, students are encouraged to participate in outreach programs in data science. This particular outreach program is designed for use by wet lab scientists who wish to start learning bioinformatics. 
 
-The Science Foundation Ireland (SFI) funded Centre for Research Training (CRT) in Genomics Data Science PhD programme currently has 15 participating students, this is expected to grow by approximately 25 students each year for the next three years. 
+# Workshop Outline
+This document contains a breakdown of the topics covered in the workshop. Materials will be generated and diseminated on a week to week basis. Thus, folders for topics in the outline may not be instantly available.
 
-As part of the SFI funding, students are encouraged to participate in outreach programs in data science. This particular outreach program is designed for use by wet lab scientists who wish to start learning bioinformatics. 
+#### Week 1
+###### Installing Dependencies
+Working under the assumption that most participants have either a MacOS or a Windows operating system, it is crucial for each user to have access to the same software. For this we have decided to use Anaconda, a package manager deployable across Windows, Mac & Linux systems. The first week of the Workshop will be dedicated to making sure each participant has a fully working version of Anaconda. 
 
-The first topic we will cover is how to set up a basic bioinformatics computer environment. This will include getting familiar with online repositiories which are used by bioinformaticians to store their pipelines and code. The one which we will be using is called GitHub (www.GitHub.com). 
-Your first task will be to set up an account on the website and follow the CRT GitHub repository, this can be found at www.GitHub.com/Genomics-CRT. 
+###### Creating a Github account
+Github is a free website where users can access code repositories, and create their own repositories to store code, notes and small files of data (max 100MB). As the workshop is being conducted via github, we strongly encourage participants to create a github account. 
 
-All of the tutorials and pipelines will be posted on this page in the repositories section and will be available for download here https://github.com/Genomics-CRT?tab=repositories  
+`Tutorial:` 
+* A guide on how to install Anaconda on your operating system. After sucessfully installing Anaconda, participants will be shown how to install Python and R Studio complete with an introduction to their interface. 
+* A guide on how to set up a Github account, and how to navigate the website and workshop. 
 
-GitHub also allows you to raise issues for anything you need help with. This is one of the main reasons we are using GitHub, for the interaction it allows between us. 
-To do this, go into the repository that you are having a problem with and click on the issues tab
+`Zoom meeting:`
+* Assistance will be available to participants via `Zoom` to troubleshoot installation. `Zoom` offers screen sharing mode, allowing tutors to consult error messages you may encounter. This will be the only time course organisers will be offering software assistance via `Zoom`. 
+ 
+ ***
 
-![Issuestab](https://github.com/Genomics-CRT/images/blob/master/Screenshot%20from%202020-04-02%2013-45-29.png)
+#### Week 2 
+###### Introduction to R (part 1)
+A gentle introduction to R programming language, covering the basic syntax of R. Topics covered include data structures in R, creating + calling variables, logical operators, conditional statements, vectors, functions and loading packages in R. 
 
+###### Resources:
+* `Document:` **link to R_syntax.md**. A markdown document containing descriptions, pseudocode and R code applications of the topics covered. 
+* `Worksheet:` **link to R_syntax.rmd**. A Rmd file of coding challenges for participants. 
+* `Solutions:` **link to R_syntax_solutions.rmd**. A Rmd file containing solution to the worksheet. 
 
-Once in the issues tab, click on the labels button and select which filter applies to your issue. An example of a label will be “Help wanted”. 
+###### Introduction to Python (part 1)
+as above. 
 
-![labelling](https://github.com/Genomics-CRT/images/blob/master/Screenshot%20from%202020-04-02%2013-43-39.png)
+#### Week 3 
+###### Introduction to R (part 2)
+Data frames, reading files, creating files, 
 
+###### Introduction to Python (part 2)
+as above.
 
-Once this is done, click on New issue. This will take you to a page where you can add a title to your issue and describe exactly what is happening, then a member of the CRT will be able to help you through the problem.
+#### Week 4
+###### Introduction to R (part 3)
+Data cleaning, visualizations... 
 
-![issuesform](https://github.com/Genomics-CRT/images/blob/master/Screenshot%20from%202020-04-02%2013-48-53.png)
+###### Introduction to Python (part 3)
+as above.
 
-That’s the basics of GitHub, feel free to explore the rest of the functions and visit other pages.
+#### Week 5
+###### Math and Statistics
+###### R
+mean, mode, variance, SD, quartiles, hypothesis testing
+###### Python
+as above.
 
-The next tutorial will cover installing Anaconda onto your computer.
-
-Any issues regarding the coding excercises are to be posted under `issues`
+#### Week 6
