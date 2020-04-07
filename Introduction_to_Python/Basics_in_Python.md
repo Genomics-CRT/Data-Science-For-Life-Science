@@ -57,6 +57,12 @@ We can also update our variable as needed such as:
 
 x will now equal 15, this type of updating variables is very useful.
 
+Python variable naming convention states that the words in variables are lowercase and seperated by an underscore
+e.g.:
+`gene_name = 'ABCA1'`
+
+
+
 
 ## Print function
 The `print()` function in python will print the output of your code onto the console. 
