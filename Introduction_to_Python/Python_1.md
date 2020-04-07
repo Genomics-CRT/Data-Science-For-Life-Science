@@ -3,21 +3,21 @@
 
 ## Strings
 Strings are simply characters surrounded by `'` or `"` quotes
-For example, `myString = 'This is a string'`.
+For example, `my_string = 'This is a string'`.
 The `print()` function can be used to show the output of strings
 
 Strings can be joined together using the `+` operator
 
-`print(myString + " which I made longer")`
+`print(my_string + " which I made longer")`
 
 You can change the string to upper or lower case using the `.upper()` or `.lower()` methods
-`myString.upper()` will output `THIS IS A STRING`
+`my_string.upper()` will output `THIS IS A STRING`
 
 These two methods are useful when you want to work with input from a user.
 
 You can check what data type a variable is by using the type function 
 
-`type(myString)` will return `str`
+`type(my_string)` will return `str`
 
 Any character can be a string, this include digits.
 
@@ -36,41 +36,41 @@ f strings allow easy and readable formatting of strings.
 
 ```
 date = "02/04/20"
-experimentNumber = 17
+experiment_number = 17
 result17 = "Success"
 
-print(f'Experiment {experimentNumber} which was carried out on {date} was a {result17}')
+print(f'Experiment {experiment_number} which was carried out on {date} was a {result17}')
 ```
 f strings also allows you to do calculations, function calls, methods etc. within a string
 
 `print(f'The answer to 50 * 275 is {50*275}')`
-`print(f'There is no need to shout {myString.upper()}')`
+`print(f'There is no need to shout {my_string.upper()}')`
 
 We can use the same variable as many times as needed when printing f strings.
 
 ```
-newLine = '\n'
-print(f"A {newLine} new line {newLine} any {newLine} time we want{newLine} one")
+new_line = '\n'
+print(f"A {new_line} new line {new_line} any {new_line} time we want{new_line} one")
 ```
 
 # Tuples and Lists
 
 You can store more than just one value in a variable in python by using sequence data types such as tuples or lists
 
-Tuples are created by using `( )` e.g. `myTuple = (1,3,7,8,16)`  
-Lists are created using ` [ ]` e.g. myList = [2,4,5,12,60]
+Tuples are created by using `( )` e.g. `my_tuple = (1,3,7,8,16)`  
+Lists are created using ` [ ]` e.g. `my_list = [2,4,5,12,60]`
 
 You can select the first value in these by doing the following: (Python starts counting from 0 unlike R which is 1)
 
-`myTuple[0]` or `myList[0]` This is known as indexing, the first value in our tuples/lists is index 0.
+`my_tuple[0]` or `my_list[0]` This is known as indexing, the first value in our tuples/lists is index 0.
 
 You can grab multiple values from a list at once by using indexing.
-`myList[ : 3]`  will grab all of the values in myList up to the 3rd index. 
-`mList [2:4]` will grab values 5 and 12 from myList,  you can visualise this by breaking it down into:  
-`myList[2]`
-`myList[3]`
+`my_list[ : 3]`  will grab all of the values in my_list up to the 3rd index. 
+`my_list [2:4]` will grab values 5 and 12 from my_list,  you can visualise this by breaking it down into:  
+`my_list[2]`
+`my_list[3]`
 
-Note how the 4th value is not grabbed, this is a common rule in python when dealing with ranges of numbers, it will include the starting number but will stop one number below the given ending number. `MyList[2:4]` directly translates as grab everything from index 2 up to but not including index 4.
+Note how the 4th value is not grabbed, this is a common rule in python when dealing with ranges of numbers, it will include the starting number but will stop one number below the given ending number. `my_list[2:4]` directly translates as grab everything from index 2 up to but not including index 4.
 
 The main difference between tuples and lists is that tuples cannot be modified once they are made.
 
@@ -78,43 +78,43 @@ Let's try to update the first value in each of these. What happens to the conten
 
 
 ```
-myTuple[0] = 100
-myList[0] = 100
+my_tuple[0] = 100
+my_list[0] = 100
 
-print(myTuple)
-print(myList)
+print(my_tuple)
+print(my_list)
 ```
 
 The `.append()` method allows you to add an item to a list.
 
 ```
-print(myList)
-myList.append(22)
-print(myList)
+print(my_list)
+my_list.append(22)
+print(my_list)
 ```
 
 Lists can be sorted into ascending values using the `.sort()` method
 
 ```
-print(myList)
-myList.sort()
-print(myList)
+print(my_list)
+my_list.sort()
+print(my_list)
 ```
 You can remove a value from lists by passing the .remove() method
 
 ```
-print(myList)
-myList.remove(22)
-print(myList)
+print(my_list)
+my_list.remove(22)
+print(my_list)
 ```
 This will remove the first occurrence of the value 22 in the list.
 
 What if you want to delete the third entry of your list, regardless of its value? Use `del`
 
 ```
-print(myList)
-del myList[2]
-print(myList)
+print(my_list)
+del my_list[2]
+print(my_list)
 ```
 
 # For loops
@@ -123,19 +123,19 @@ An example of a for loop is:
 
 ```
 #create your various lists
-listOfDates=["02/04/2020", "03/04/2020", "04/04/2020"]
-experimentNumbers = [17,18,19]
+list_of_dates=["02/04/2020", "03/04/2020", "04/04/2020"]
+experiment_numbers = [17,18,19]
 results = ["Success", "Failure", "Success"]
 
-#initialise the for loop, for the first value in the listOfDates, 
+#initialise the for loop, for the first value in the list_of_dates, 
 #assign it to the temporary variable date
 
-for date in listOfDates:
+for date in list_of_dates:
     #next, print this temporary variable
 
     print(f'The experiment took place on {date})
 
-    #Once this has been done, return to the listOfDates list and assign the 
+    #Once this has been done, return to the list_of_dates list and assign the 
     #next value to the temporary variable date
     #repeat until every value in dates has been used up, the for loop will then end.
     
@@ -149,12 +149,12 @@ Instead of initiating the loop using the list, we can use the indexing we learne
 
 ```
 dates=["02/04/2020", "03/04/2020", "04/04/2020"]
-experimentNumbers = [17,18,19]
+experiment_numbers = [17,18,19]
 results = ["Success", "Failure", "Success"]
 
 #initialise the for loop
 for i in range(0, len(dates)):
-    print(f'Experiment {experimentNumbers[i]} which was carried out on {dates[i]} was a {results[i]}')
+    print(f'Experiment {experiment_numbers[i]} which was carried out on {dates[i]} was a {results[i]}')
 ```
 
 To explain what happened here we need to understand the range and len functions.
@@ -164,10 +164,10 @@ To explain what happened here we need to understand the range and len functions.
 `range(0, len(dates)` is the same as `range(0, 3)` which will give the sequence `0, 1, 2`
 
 So the first iteration of the loop would be  
-`print(f'Experiment {experimentNumbers[0]} which was carried out on {dates[0]} was a {results[0]}')`
+`print(f'Experiment {experiment_numbers[0]} which was carried out on {dates[0]} was a {results[0]}')`
 
 The second iteration of the loop would use the second number in the sequence which is 1
-`print(f'Experiment {experimentNumbers[1]} which was carried out on {dates[1]} was a {results[1]}')`
+`print(f'Experiment {experiment_numbers[1]} which was carried out on {dates[1]} was a {results[1]}')`
 
 And so on, you can imagine how useful this type of automation would be when dealing with data which has 1000s of entries.
 
@@ -179,7 +179,7 @@ We can go back to our previous for loop and add some flow control to it.
 
 ```
 dates=["02/04/2020", "03/04/2020", "04/04/2020"]
-experimentNumbers = [17,18,19]
+experiment_numbers = [17,18,19]
 results = ["Success", "Failure", "Success"]
 
 #initialise the for loop
@@ -187,11 +187,11 @@ for i in range(0, len(dates)):
 
   #check if it is the date we are looking for
 	if dates[i] == “04/04/2020”:
-   		 print(f'Experiment {experimentNumbers[i]} which was carried out on {dates[i]} was a {results[i]}')
+   		 print(f'Experiment {experiment_numbers[i]} which was carried out on {dates[i]} was a {results[i]}')
   
   #if its not the date we are looking for, check if it was a Success
   elif results[i] == "Success":
-      print(f'Experiment number {experimentNumbers[i]} was a Success!)  
+      print(f'Experiment number {experiment_numbers[i]} was a Success!)  
   
   #if its not the date or a success then run the else statement
   else
