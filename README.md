@@ -10,7 +10,7 @@ The workshop will follow this weekly schedule for the duration of the course:
 
 *Week 1 is an anomaly, dedicated to installing software. The zoom meeting will mostly be an informal meet and greet, if participants have issues or queries they can be addressed in week 1 zoom meeting only*. 
 
-For the duration of the course, participants are encouraged to use the Github "issues" tab to post code queries or issues. This is by far the easiest way for course coordinators to debug issues you may be having. Debugging issues over zoom is not beneficiary for all participants and time consuming. 
+For the duration of the course, participants are encouraged to use the Github "issues" tab to post code queries or issues. This is by far the easiest way for course coordinators to debug issues you may be having. Debugging issues over zoom is not beneficial for all participants and is time consuming for course coordinators. 
 
 ## Week 1
 ##### Installing Dependencies
