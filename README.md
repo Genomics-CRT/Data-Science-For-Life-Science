@@ -13,60 +13,65 @@ The workshop will follow this weekly schedule for the duration of the course:
 For the duration of the course, participants are encouraged to use the Github "issues" tab to post code queries or issues. This is by far the easiest way for course coordinators to debug issues you may be having. Debugging issues over zoom is not beneficial for all participants and is time consuming for course coordinators. 
 
 ## Week 1 (13/04/2020)
-##### Installing Dependencies
+#### Installing Dependencies
 Working under the assumption that most participants have either a MacOS or a Windows operating system, it is crucial for each user to have access to the same software. For this we have decided to use Anaconda, a package manager deployable across Windows, Mac & Linux systems. The first week of the Workshop will be dedicated to making sure each participant has a fully working version of Anaconda. 
 
 A tutorial on how to install Anaconda is available [here](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Getting%20started/Installing%20Anaconda.md). 
 
-##### Creating a Github account
+#### Creating a Github account
 Github is a free website where users can access code repositories, and create their own repositories to store code, notes and small files of data (max 100MB). As the workshop is being conducted via github, we strongly encourage participants to create a github account. 
 
 A guide on how to set up a Github account, navigate the website and workshop repository is available [here](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Getting%20started/GitHub%20Basics.md). 
 
-##### Zoom meeting
+#### Zoom meeting
 * `Thursday 16th 2-3pm`.
  
  ***
 
 ## Week 2 (20/04/2020)
-###### Introduction to R (part 1)
+#### Introduction to R (part 1)
 A gentle introduction to R Studio and the R programming language, covering the basic syntax of R. Topics covered include data structures in R, creating + calling variables, logical operators, conditional statements, vectors, functions, for loops, while loops and loading packages in R. 
 
 Resources are available in the following folder [here](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/tree/master/Introduction_to_R/Part_1). 
 
 
-###### Introduction to Python (part 1)
+#### Introduction to Python (part 1)
 A gentle introduction to Spyder GUI and the Python programming language, covering the basic syntax of Python. Topics covered include data structures in Python, creating + calling variables, logical operators, conditional statements, vectors, functions, for loops, while loops and loading python libraries. 
 
-##### Zoom meeting
+#### Zoom meeting
 * `Thursday 23rd 2-3pm`
 
 ***
 
 ## Week 3 (27/04/2020)
-##### Introduction to R (part 2)
+#### Introduction to R (part 2)
 
-##### Introduction to Python (part 2)
+#### Introduction to Python (part 2)
 
+#### Zoom meeting
 ***
 
 ## Week 4 (04/05/2020)
-##### Introduction to R (part 3)
+#### Introduction to R (part 3)
 
-##### Introduction to Python (part 3)
+#### Introduction to Python (part 3)
 
+#### Zoom meeting
 ***
 
 ## Week 5 (11/05/2020)
 
-##### Math and Statistics (R)
+#### Math and Statistics (R)
 
-##### Math and Statistics (Python)
+#### Math and Statistics (Python)
 
+#### Zoom meeting
 ***
 
 ## Week 6 (18/05/2020)
 
-##### Machine Learning (R) 
+#### Machine Learning (R) 
 
-##### Machine Learning (Python)
+#### Machine Learning (Python)
+
+#### Zoom meeting
