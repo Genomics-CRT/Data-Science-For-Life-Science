@@ -32,11 +32,13 @@ A guide on how to set up a Github account, navigate the website and workshop rep
 #### Introduction to R (part 1)
 A gentle introduction to R Studio and the R programming language, covering the basic syntax of R. Topics covered include data structures in R, creating + calling variables, logical operators, conditional statements, vectors, functions, for loops, while loops and loading packages in R. 
 
-Resources are available in the following folder [here](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/tree/master/Introduction_to_R/Part_1). 
+Resources are will be relased on `20/04/2020`. 
 
 
 #### Introduction to Python (part 1)
 A gentle introduction to Spyder GUI and the Python programming language, covering the basic syntax of Python. Topics covered include data structures in Python, creating + calling variables, logical operators, conditional statements, vectors, functions, for loops, while loops and loading python libraries. 
+
+Resources will be released on `20/04/2020`.
 
 #### Zoom meeting
 * `Thursday 23rd 2-3pm`
