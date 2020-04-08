@@ -117,6 +117,18 @@ del my_list[2]
 print(my_list)
 ```
 
+Strings can be turned into lists using the `split()` method. This method will split the string into a list containing items based on the separator you pass into it. The separator can be anything at all, in the two examples below a space character is used in the first and a hyphen in the second.
+
+```
+the_string = ('BRCA1 BRCA2 P53 RB APC')
+string_to_list = the_string.split(' ')
+print(string_to_list)
+type(string_to_list)
+
+list_of_names_from_a_string = ('Barry-Stephen-Ghandi-Tyson').split('-')
+```
+
+
 # For loops
 For loops are used to automate tasks so that the user does not have to type multiple lines of code.
 An example of a for loop is:
