@@ -31,7 +31,7 @@ Follow the Github page. Any additions made to the `Genomics-CRT` page will show 
 ***
 
 # Posting questions
-Due to the large amount of interest in the workshop, we have decided that offering assistance via Zoom is no longer feasible. Instead, we encourage you to post your questions to the repositories `issues` tab. The post will be publicly visible and will be useful for other participants to view if they are having the same issues. Furthermore, this will allow course coordinators to answer the questions outside of scheduled zoom hours. We will endevour to answer your questions as quickly as possible!
+Due to the large amount of interest in the workshop, we have decided that offering assistance via Zoom is no longer feasible. Instead, we encourage you to post your questions to the repositories `issues` tab. The post will be publicly visible and will be useful for other participants to view if they are having the same issues. Furthermore, this will allow course coordinators to answer the questions outside of scheduled zoom hours. We will endeavour to answer your questions as quickly as possible!
 
 ![Issuestab](https://github.com/Genomics-CRT/images/blob/master/issuestab.png)
 
