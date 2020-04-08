@@ -12,7 +12,7 @@ The workshop will follow this weekly schedule for the duration of the course:
 
 For the duration of the course, participants are encouraged to use the Github "issues" tab to post code queries or issues. This is by far the easiest way for course coordinators to debug issues you may be having. Debugging issues over zoom is not beneficial for all participants and is time consuming for course coordinators. 
 
-## Week 1
+## Week 1 (13/04/2020)
 ##### Installing Dependencies
 Working under the assumption that most participants have either a MacOS or a Windows operating system, it is crucial for each user to have access to the same software. For this we have decided to use Anaconda, a package manager deployable across Windows, Mac & Linux systems. The first week of the Workshop will be dedicated to making sure each participant has a fully working version of Anaconda. 
 
@@ -28,7 +28,7 @@ A guide on how to set up a Github account, navigate the website and workshop rep
  
  ***
 
-## Week 2 
+## Week 2 (20/04/2020)
 ###### Introduction to R (part 1)
 A gentle introduction to R Studio and the R programming language, covering the basic syntax of R. Topics covered include data structures in R, creating + calling variables, logical operators, conditional statements, vectors, functions, for loops, while loops and loading packages in R. 
 
@@ -43,21 +43,21 @@ A gentle introduction to Spyder GUI and the Python programming language, coverin
 
 ***
 
-## Week 3 
+## Week 3 (27/04/2020)
 ##### Introduction to R (part 2)
 
 ##### Introduction to Python (part 2)
 
 ***
 
-## Week 4
+## Week 4 (04/05/2020
 ##### Introduction to R (part 3)
 
 ##### Introduction to Python (part 3)
 
 ***
 
-## Week 5
+## Week 5 (11/05/2020)
 
 ##### Math and Statistics (R)
 
@@ -65,7 +65,7 @@ A gentle introduction to Spyder GUI and the Python programming language, coverin
 
 ***
 
-## Week 6
+## Week 6 (18/05/2020)
 
 ##### Machine Learning (R) 
 
