@@ -36,7 +36,7 @@ Resources are will be relased on `20/04/2020`.
 
 
 #### Introduction to Python (part 1)
-A gentle introduction to Spyder GUI and the Python programming language, covering the basic syntax of Python. Topics covered include data structures in Python, creating + calling variables, logical operators, conditional statements, vectors, functions, for loops, while loops and loading python libraries. 
+A gentle introduction to Spyder GUI and the Python programming language, covering the basic syntax of Python. Topics covered include data structures in Python, creating + calling variables, logical operators, conditional statements, for loops,and  while loops. 
 
 Resources will be released on `20/04/2020`.
 
