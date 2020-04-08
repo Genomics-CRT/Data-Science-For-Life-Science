@@ -50,7 +50,7 @@ A gentle introduction to Spyder GUI and the Python programming language, coverin
 
 ***
 
-## Week 4 (04/05/2020
+## Week 4 (04/05/2020)
 ##### Introduction to R (part 3)
 
 ##### Introduction to Python (part 3)
