@@ -34,7 +34,7 @@ When working with strings in python it is best practice to use what are called f
 
 f strings allow easy and readable formatting of strings. 
 
-```
+```python
 date = "02/04/20"
 experiment_number = 17
 result17 = "Success"
