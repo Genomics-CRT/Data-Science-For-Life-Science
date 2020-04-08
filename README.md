@@ -36,7 +36,7 @@ Resources are available in the following folder [here](https://github.com/Genomi
 
 
 ###### Introduction to Python (part 1)
-A gentle introduction to Spyder GUI and the Python programming language, covering the basic syntax of Python. Topics covered include data structures in R, creating + calling variables, logical operators, conditional statements, vectors, functions, for loops, while loops and loading python libraries. 
+A gentle introduction to Spyder GUI and the Python programming language, covering the basic syntax of Python. Topics covered include data structures in Python, creating + calling variables, logical operators, conditional statements, vectors, functions, for loops, while loops and loading python libraries. 
 
 ##### Zoom meeting
 * `Thursday 23rd 2-3pm`
