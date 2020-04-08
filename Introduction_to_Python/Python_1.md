@@ -8,7 +8,9 @@ The `print()` function can be used to show the output of strings
 
 Strings can be joined together using the `+` operator
 
-`print(my_string + " which I made longer")`
+```python
+print(my_string + " which I made longer")
+```
 
 You can change the string to upper or lower case using the `.upper()` or `.lower()` methods
 `my_string.upper()` will output `THIS IS A STRING`
@@ -48,7 +50,7 @@ f strings also allows you to do calculations, function calls, methods etc. withi
 
 We can use the same variable as many times as needed when printing f strings.
 
-```
+```python
 new_line = '\n'
 print(f"A {new_line} new line {new_line} any {new_line} time we want{new_line} one")
 ```
@@ -77,7 +79,7 @@ The main difference between tuples and lists is that tuples cannot be modified o
 Let's try to update the first value in each of these. What happens to the contents of your variables when you run this code? What error message are you getting?
 
 
-```
+```python
 my_tuple[0] = 100
 my_list[0] = 100
 
@@ -87,7 +89,7 @@ print(my_list)
 
 The `.append()` method allows you to add an item to a list.
 
-```
+```python
 print(my_list)
 my_list.append(22)
 print(my_list)
@@ -95,14 +97,14 @@ print(my_list)
 
 Lists can be sorted into ascending values using the `.sort()` method
 
-```
+```python
 print(my_list)
 my_list.sort()
 print(my_list)
 ```
 You can remove a value from lists by passing the .remove() method
 
-```
+```python
 print(my_list)
 my_list.remove(22)
 print(my_list)
@@ -111,7 +113,7 @@ This will remove the first occurrence of the value 22 in the list.
 
 What if you want to delete the third entry of your list, regardless of its value? Use `del`
 
-```
+```python
 print(my_list)
 del my_list[2]
 print(my_list)
@@ -119,7 +121,7 @@ print(my_list)
 
 Strings can be turned into lists using the `split()` method. This method will split the string into a list containing items based on the separator you pass into it. The separator can be anything at all, in the two examples below a space character is used in the first and a hyphen in the second.
 
-```
+```python
 the_string = ('BRCA1 BRCA2 P53 RB APC')
 string_to_list = the_string.split(' ')
 print(string_to_list)
@@ -133,7 +135,7 @@ list_of_names_from_a_string = ('Barry-Stephen-Ghandi-Tyson').split('-')
 Dictionaries are a way of storing information (values) and returning those values using an identifier (key).
 `{'key':'value'}
 
-```
+```python
 my_dict = {'BRCA1':[45,34,44,47,66], 'BRCA2':[88, 82, 75, 78, 90], 'P53':[12, 15, 10, 19, 16]}
 
 #get the values relating to the key 'BRCA2'
@@ -147,7 +149,7 @@ my_dict['BRCA2'][4]
 For loops are used to automate tasks so that the user does not have to type multiple lines of code.
 An example of a for loop is:
 
-```
+```python
 #create your various lists
 list_of_dates=["02/04/2020", "03/04/2020", "04/04/2020"]
 experiment_numbers = [17,18,19]
@@ -173,7 +175,7 @@ This website http://www.pythontutor.com/visualize.html#mode=edit shows you what 
 This for loop is useful but how can we use a single for loop to loop over multiple lists?  
 Instead of initiating the loop using the list, we can use the indexing we learned earlier and some new functions which can create sequences of numbers.
 
-```
+```python
 dates=["02/04/2020", "03/04/2020", "04/04/2020"]
 experiment_numbers = [17,18,19]
 results = ["Success", "Failure", "Success"]
@@ -203,7 +205,7 @@ Conditional statements are used to control what your code does and when it does 
 The conditional statements in Python are `if` `elif` `else`   
 We can go back to our previous for loop and add some flow control to it.
 
-```
+```python
 dates=["02/04/2020", "03/04/2020", "04/04/2020"]
 experiment_numbers = [17,18,19]
 results = ["Success", "Failure", "Success"]
@@ -233,7 +235,7 @@ There are many ways to control your code using if statements and conditionals su
 ## While loops
 While loops are another type of loop which rely on Boolean values to control when when to run and when to finish. They differ from for loops in that for loops tend to iterate over a sequential data type whereas while loops will run constantly until a condition is met.
 
-```
+```python
 i = 10
 
 while i > 5:
