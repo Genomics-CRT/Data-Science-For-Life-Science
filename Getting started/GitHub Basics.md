@@ -1,4 +1,35 @@
-# Data-Science-For-Life-Science
+# Getting started with Github
+
+Welcome to the Genomics CRT workshop. First things first, you will need to set up a github account! If you are viewing this page and do not have an account, you should see a prompt from Github like this: 
+
+![github_sign_up_1](https://github.com/Genomics-CRT/images/blob/master/github_sign_up_1.png)
+
+Click `sign up` and fill out your account information:
+
+![github_sign_up_2](https://github.com/Genomics-CRT/images/blob/master/github_sign_up_2.png)
+
+Click `Select Plan`, and coose the free plan. 
+
+![github_sign_up_3](https://github.com/Genomics-CRT/images/blob/master/github_sign_up_3.png)
+
+You can skip the next step, or answer the questions to tailor suggestions by Github. Github will not flood your home page like a social media site would, so this step is largely optional. An email will be sent to your email address to confirm the registration. 
+
+![github_sign_up_4](https://github.com/Genomics-CRT/images/blob/master/github_sign_up_4.png)
+
+![github_sign_up_5](https://github.com/Genomics-CRT/images/blob/master/github_sign_up_5.png)
+
+You should now have created a Github account. To find the GenomicsCRT github page, search for the username in the search bar:
+
+![github_sign_up_6](https://github.com/Genomics-CRT/images/blob/master/github_sign_up_6.png)
+
+*Note: be sure to add the dash for Genomics-CRT*
+
+![github_sign_up_7](https://github.com/Genomics-CRT/images/blob/master/github_sign_up_7.png)
+
+Follow the Github page. Any additions made to the `Genomics-CRT` page will show up on your home page. 
+
+***
+
 
 The Science Foundation Ireland (SFI) funded Centre for Research Training (CRT) in Genomics Data Science PhD programme currently has 15 participating students, this is expected to grow by approximately 25 students each year for the next three years. 
 
