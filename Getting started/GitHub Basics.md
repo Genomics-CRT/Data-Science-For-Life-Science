@@ -30,33 +30,20 @@ Follow the Github page. Any additions made to the `Genomics-CRT` page will show 
 
 ***
 
-
-The Science Foundation Ireland (SFI) funded Centre for Research Training (CRT) in Genomics Data Science PhD programme currently has 15 participating students, this is expected to grow by approximately 25 students each year for the next three years. 
-
-As part of the SFI funding, students are encouraged to participate in outreach programs in data science. This particular outreach program is designed for use by wet lab scientists who wish to start learning bioinformatics. 
-
-The first topic we will cover is how to set up a basic bioinformatics computer environment. This will include getting familiar with online repositiories which are used by bioinformaticians to store their pipelines and code. The one which we will be using is called GitHub (www.GitHub.com). 
-Your first task will be to set up an account on the website and follow the CRT GitHub repository, this can be found at www.GitHub.com/Genomics-CRT. 
-
-All of the tutorials and pipelines will be posted on this page in the repositories section and will be available for download here https://github.com/Genomics-CRT?tab=repositories  
-
-GitHub also allows you to raise issues for anything you need help with. This is one of the main reasons we are using GitHub, for the interaction it allows between us. 
-To do this, go into the repository that you are having a problem with and click on the issues tab
+# Posting questions
+Due to the large amount of interest in the workshop, we have decided that offering assistance via Zoom is no longer feasible. Instead, we encourage you to post your questions to the repositories `issues` tab. The post will be publicly visible and will be useful for other participants to view if they are having the same issues. Furthermore, this will allow course coordinators to answer the questions outside of scheduled zoom hours. We will endevour to answer your questions as quickly as possible!
 
 ![Issuestab](https://github.com/Genomics-CRT/images/blob/master/issuestab.png)
 
 
-Once in the issues tab, click on the labels button and select which filter applies to your issue. An example of a label will be “Help wanted”. 
+When posting a question, be sure to make the post title descriptive and succinct. You may attach a label to the question such as `R help`, `Python help` or `software issue` -- you get the idea.
 
 ![labelling](https://github.com/Genomics-CRT/images/blob/master/Screenshot%20from%202020-04-02%2013-43-39.png)
 
-
-Once this is done, click on New issue. This will take you to a page where you can add a title to your issue and describe exactly what is happening, then a member of the CRT will be able to help you through the problem.
+A nice feature Github offers is to upload a file to the issues post. You can post error logs with your post, or if you are having trouble loading a file we provide, attach the file in question to the post (you may have overwritten the file or changed the delimiters from comma to tab). This will allow us to debug your issue much faster.
 
 ![issuesform](https://github.com/Genomics-CRT/images/blob/master/Screenshot%20from%202020-04-02%2013-48-53.png)
 
-That’s the basics of GitHub, feel free to explore the rest of the functions and visit other pages.
+***
 
-The next tutorial will cover installing Anaconda onto your computer.
-
-Any issues regarding the coding excercises are to be posted under `issues`
+This concludes the tutorial on setting up a github account. Feel free to search github for snippets of code, you will find a huge amount of resources freely available to use. You can also filter by the programming language used to filter for R or Python code. Enjoy!
