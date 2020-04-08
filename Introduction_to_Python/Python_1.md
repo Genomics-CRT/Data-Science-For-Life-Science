@@ -1,4 +1,4 @@
-# Strings, Lists, Tuples, For Loops, While loops.
+# Strings, Lists, Tuples, Dictionaries, For Loops, While loops.
 
 
 ## Strings
@@ -129,6 +129,20 @@ list_of_names_from_a_string = ('Barry-Stephen-Ghandi-Tyson').split('-')
 ```
 
 
+# Dictionaries
+Dictionaries are a way of storing information (values) and returning those values using an identifier (key).
+`{'key':'value'}
+
+```
+my_dict = {'BRCA1':[45,34,44,47,66], 'BRCA2':[88, 82, 75, 78, 90], 'P53':[12, 15, 10, 19, 16]}
+
+#get the values relating to the key 'BRCA2'
+my_dict['BRCA2']
+
+#get the value of the item at index 4 of 'BRCA2'
+my_dict['BRCA2'][4]
+```
+
 # For loops
 For loops are used to automate tasks so that the user does not have to type multiple lines of code.
 An example of a for loop is:
@@ -214,6 +228,7 @@ for i in range(0, len(dates)):
 For the first if statement this code will only print the result if the date is equal to “04/04/2020”. elif (else if) will print out if the first if condition is not met and the elif condition is met. Conditionals are very useful when dealing with large datasets. They allow you to pull out exactly what you are looking for. Try to modify this code so that it will only print for experiment number 18, do not use the dates list to do this.
 
 There are many ways to control your code using if statements and conditionals such as `== != > < <= >=` (equal to, not equal to, greater than, less than, less than or equal to, greater than or equal to)
+
 
 ## While loops
 While loops are another type of loop which rely on Boolean values to control when when to run and when to finish. They differ from for loops in that for loops tend to iterate over a sequential data type whereas while loops will run constantly until a condition is met.
