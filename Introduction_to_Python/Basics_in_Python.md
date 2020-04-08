@@ -30,9 +30,9 @@ A large part of your time spent coding will be reading through package documenta
 ## Operators
 Python uses the same operators as R. 
 
-`+  - * /` which is addition, subtraction, multipication, and division.
+`+  - * / **` which is addition, subtraction, multipication,division, exponent.
 
-You can try these out by typing the code into the editor and pressing F9 to run the line, you will see the answer show up in the console.
+You can try these out by typing code into the editor and pressing F9 to run the line, you will see the answer show up in the console.
 
 ## Variables
 Variables are a way to store values for use later in your code. 
@@ -41,7 +41,10 @@ This can be done using the `=` key, for example:
 
 `x = 10`
 
-will assign 10 to the variable x
+Will assign 10 to the variable x
+
+Now if you want to see what is saved inside a variable you can print it to the console
+`print(x)`
 
 You should always choose a variable name which is related to the value inside the variable. e.g. if you are storing a persons name inside a variable do not call the variable “age”.
 
@@ -61,17 +64,11 @@ Python variable naming convention states that the words in variables are lowerca
 e.g.:
 `gene_name = 'ABCA1'`
 
-
-
-
-## Print function
-The `print()` function in python will print the output of your code onto the console. 
-
 ## Comments
 Comments can be added to your python code by placing `#` before what you type.  
 It is good practice to comment your code so that others, and yourself, can understand what your  
 thought process was when you were writing the code. This allows easy understanding, and editing, of the code in the future.
-When you run your script python will ignore anything you type after the `#`
+When you run your script python will ignore anything you type after the `#`.
 
 
 ## Data types
