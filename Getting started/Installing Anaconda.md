@@ -59,4 +59,26 @@ In the command line, type in:
 You will be asked to proceed, type Y and hit enter.
 R-studio will now be installed.
 
+
+# Point and click method to install R/R-Studio on all system types
+
+You should ideally get familiar with using the command line to install software and packages but we are aware that there can be issues when using windows.
+
+This is a point and click method of installing R/R-studio that you can use if the previous methods did not work for you.
+
+First, open Anaconda Navigator and click on environments
+
+![environment tab]()
+
+Next, click on create at the bottom. Name your environment something R related so you know what it is for. Deselect the Python checkbox and select the R checkbox.
+
+![renvironmentname]()
+
+Once this is done click create and wait for it to finish setting up the environment.  
+Go to the Home tab, find R-Studio and install it. 
+
+![hometabrstudio]()
+
+If you get the error message "R-studio cannot be installed on this environment, would you like to set up a new one?" click yes and allow anaconda to set up a new R-studio environment for you. 
+
 Congratulations! You now have everything you need to begin learning Bioinformatics!
