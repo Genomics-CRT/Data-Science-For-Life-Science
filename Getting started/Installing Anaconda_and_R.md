@@ -68,16 +68,16 @@ This is a point and click method of installing R/R-studio that you can use if th
 
 First, open Anaconda Navigator and click on environments
 
-![environment tab]()
+![environment tab](https://github.com/Genomics-CRT/images/blob/master/environmenttab.png)
 
 Next, click on create at the bottom. Name your environment something R related so you know what it is for. Deselect the Python checkbox and select the R checkbox.
 
-![renvironmentname]()
+![renvironmentname](https://github.com/Genomics-CRT/images/blob/master/renvironment.png)
 
 Once this is done click create and wait for it to finish setting up the environment.  
 Go to the Home tab, find R-Studio and install it. 
 
-![hometabrstudio]()
+![hometabrstudio](https://github.com/Genomics-CRT/images/blob/master/rstudioinstall.png)
 
 If you get the error message "R-studio cannot be installed on this environment, would you like to set up a new one?" click yes and allow anaconda to set up a new R-studio environment for you. 
 
