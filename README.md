@@ -16,7 +16,7 @@ For the duration of the course, participants are encouraged to use the Github "i
 #### Installing Dependencies
 Working under the assumption that most participants have either a MacOS or a Windows operating system, it is crucial for each user to have access to the same software. For this we have decided to use Anaconda, a package manager deployable across Windows, Mac & Linux systems. The first week of the Workshop will be dedicated to making sure each participant has a fully working version of Anaconda. 
 
-A tutorial on how to install Anaconda is available [here](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Getting%20started/Installing%20Anaconda.md). 
+A tutorial on how to install Anaconda is available [here](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Getting%20started/Installing%20Anaconda_and_R.md). 
 
 #### Creating a Github account
 Github is a free website where users can access code repositories, and create their own repositories to store code, notes and small files of data (max 100MB). As the workshop is being conducted via github, we strongly encourage participants to create a github account. 
