@@ -9,6 +9,8 @@ The workshop will follow this weekly schedule for the duration of the course:
 
 For the duration of the course, participants are encouraged to use the Github "issues" tab to post code queries or issues. This is by far the easiest way for course coordinators to debug issues you may be having. Debugging issues over zoom is not beneficial for all participants and is time consuming for course coordinators. 
 
+When an issue has been solved, it will be marked "closed" and will not appear in the open issues tab. Check the 'closed' issues tab for archived posts. 
+
 ## Week 1 (13/04/2020)
 #### Installing Dependencies
 Working under the assumption that most participants have either a MacOS or a Windows operating system, it is crucial for each user to have access to the same software. For this we have decided to use Anaconda, a package manager deployable across Windows, Mac & Linux systems. The first week of the Workshop will be dedicated to making sure each participant has a fully working version of Anaconda. 
