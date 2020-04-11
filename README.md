@@ -1,7 +1,4 @@
-# Data-Science-For-Life-Science
-The Science Foundation Ireland (SFI) funded Centre for Research Training (CRT) in Genomics Data Science PhD programme currently has 15 participating students, this is expected to grow by approximately 25 students each year for the next three years. As part of the SFI funding, students are encouraged to participate in outreach programs in data science. This particular outreach program is designed for use by wet lab scientists who wish to start learning bioinformatics. 
-
-# Workshop Outline
+ # Workshop Outline
 The workshop will follow this weekly schedule for the duration of the course:
 * **Monday**: A markdown file containing learning materials for the topics. These are essentially textbook style markdown documents that have code examples inline.
 * **Monday**: A R markdown + python file worksheet. This is a file you can download and open in R Studio and Spyder respectively. It will contain exercises for participants to complete based on the markdown file released on the same day.
@@ -22,6 +19,13 @@ A tutorial on how to install Anaconda is available [here](https://github.com/Gen
 Github is a free website where users can access code repositories, and create their own repositories to store code, notes and small files of data (max 100MB). As the workshop is being conducted via github, we strongly encourage participants to create a github account. 
 
 A guide on how to set up a Github account, navigate the website and workshop repository is available [here](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Getting%20started/GitHub%20Basics.md). 
+
+#### Linux Subsystem (Windows Users)
+A late addition to the workshop, we have decided to cover UNIX shell scripting in week 7. Participants with Linux or Mac OS systems will not need to follow this installation step, as both systems are derivatives of UNIX, sharing core libraries and applications like GNU tools. 
+
+For **windows 10** users, you can install Windows Sub-system for Linux (WSL). This distribution consists of a Linux environment compiled through Windows and enables most native command-line tools, utilities and binaries from Linux to run on Windows: the users can now run Bash scripts and all popular Linux command-line tools like sed, awk, grep, sort, apt, ssh and others. This will allow most participants to engage with week 7 shell scripting exercises. 
+
+A tutorial for windows users to install WSL has been prepared 
 
 #### Zoom meeting
 * `Thursday 16th 2-3pm`.
