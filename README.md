@@ -25,7 +25,7 @@ A late addition to the workshop, we have decided to cover UNIX shell scripting i
 
 For **windows 10** users, you can install Windows Sub-system for Linux (WSL). This distribution consists of a Linux environment compiled through Windows and enables most native command-line tools, utilities and binaries from Linux to run on Windows: the users can now run Bash scripts and all popular Linux command-line tools like sed, awk, grep, sort, apt, ssh and others. This will allow most participants to engage with week 7 shell scripting exercises. 
 
-A tutorial for windows users to install WSL has been prepared 
+A tutorial for windows users to install WSL has been prepared [here](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Getting%20started/wsl_installation.md)
 
 #### Zoom meeting
 * `Thursday 16th 2-3pm`.
