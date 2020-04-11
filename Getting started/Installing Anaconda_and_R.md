@@ -7,6 +7,8 @@ which contains the software required to do data science.
 It can be downloaded for Windows/Mac/Linux here https://www.anaconda.com/distribution/  
 Be sure to select the correct operating system. Please note: Anaconda will require approx. 2.5GB of hard drive space. 
 
+*Note: Please select Python 3.7* 
+
 The installation is pretty straight forward on both Mac and Windows.
 Select the default option for everything except the installing microsoft VS code prompt during the Mac install, 
 do not install it, just click continue.
