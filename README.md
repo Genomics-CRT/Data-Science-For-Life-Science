@@ -7,6 +7,7 @@ The workshop will follow this weekly schedule for the duration of the course:
 
 *Week 1 is an anomaly, dedicated to installing software. The zoom meeting will mostly be an informal meet and greet, if participants have issues or queries they can be addressed in week 1 zoom meeting only*. 
 
+#### Troubleshooting Issues
 For the duration of the course, participants are encouraged to use the Github "issues" tab to post code queries or issues. This is by far the easiest way for course coordinators to debug issues you may be having. Debugging issues over zoom is not beneficial for all participants and is time consuming for course coordinators. 
 
 When an issue has been solved, it will be marked "closed" and will not appear in the open issues tab. Check the 'closed' issues tab for archived posts. 
