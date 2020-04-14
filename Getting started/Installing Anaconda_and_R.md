@@ -72,9 +72,9 @@ First, open Anaconda Navigator and click on environments
 
 ![environment tab](https://github.com/Genomics-CRT/images/blob/master/environmenttab.png)
 
-Next, click on create at the bottom. Name your environment something R related so you know what it is for. Deselect the Python checkbox and select the R checkbox.
+Next, click on create at the bottom. Name your environment something R related so you know what it is for. Select Python then in the dropdown menu select Python 3.7, and select the R checkbox.
 
-![renvironmentname](https://github.com/Genomics-CRT/images/blob/master/renvironment.png)
+![renvironmentname](https://github.com/Genomics-CRT/images/blob/master/renviron.png)
 
 Once this is done click create and wait for it to finish setting up the environment.  
 Go to the Home tab, find R-Studio and install it. 
