@@ -30,6 +30,8 @@ For **windows 10** users, you can install Windows Sub-system for Linux (WSL). Th
 
 A tutorial for windows users to install WSL has been prepared [here](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Getting%20started/wsl_installation.md)
 
+If you don't have windows 10, an alternative installation of Cygwin is offered [here](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Getting%20started/Cygwin%20installation.md)
+
 #### Zoom meeting
 * `Thursday 16th 2-3pm`.
  
