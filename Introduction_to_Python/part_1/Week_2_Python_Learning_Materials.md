@@ -357,7 +357,7 @@ results = ["Success", "Failure", "Success"]
 for date in list_of_dates:
     #next, print this temporary variable
 
-    print(f'The experiment took place on {date})
+    print(f'The experiment took place on {date}')
 
     #Once this has been done, return to the list_of_dates list and assign the 
     #next value to the temporary variable date
