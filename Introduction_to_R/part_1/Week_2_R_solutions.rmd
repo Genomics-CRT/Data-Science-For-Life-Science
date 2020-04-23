@@ -1,0 +1,361 @@
+---
+title: "Week 1 worksheet: Introduction to R (part 1)"
+output: html_document
+---
+
+# Introduction
+Attempt to complete the following exercises based on week 1 teaching materials. A zoom conference will be held on the 23rd of April where a course coordinator will walk through the worksheet and subsequently post the completed worksheet to github for those unable to attend the zoom conference. 
+
+# Part 1
+A randomn vector has been generated for you, sampling 100 numbers between 1 and 100 with replacement. set.seed() is used to make sure the same numbers are generated for all participants. In part 1 we will check the length of the vector, apply the unique() function and subset the vector
+```{R Part 1}
+set.seed(11384191) #do not change!
+
+vector <- sample(1:100, 100, replace=TRUE)
+
+# [1] 
+# Confirm the length of the vector is 100
+length(vector)
+
+# [2] 
+# Use the unique() function to print unique values
+unique(vector)
+
+# [3] 
+# Combine length() and unique() to print the number of unique values in the vector
+length(unique(vector))
+
+# [4] 
+# Print the last item in the vector
+# hint: use the length() function to get the length and assign it to a variable.
+# hint: subset the vector using this variable
+len <- length(vector)
+print(vector[len])
+
+# [5] 
+# Print the 20th to 30th elements in the vector
+vector[20:30]
+```
+
+# Part 2
+Working on the same vector, you will need to use for loops, conditional statements and comparison operators to complete this exercise. 
+```{R}
+# [1] 
+# Create a for loop to print every item in the vector
+for(i in vector){
+  print(i)
+}
+
+# [2] 
+# Using a for loop to iterate over every item in the vector, add an if..else statement to check if values are 
+# above or below 50. Recall that comparison operators return TRUE if the condition is satisfied, if the condition 
+# is not satisfied the else code block is executed. If values are above 50, use the combine function to add them
+# to the vector 'above_50'. If not, add the values to 'below_50' vector.
+
+
+# Two empty vectors have been initialised for you:
+above_50 <- c()
+below_50 <- c()
+
+for(i in vector){
+    if(i > 50){
+      above_50 <- c(above_50, i) 
+    } else{
+      below_50 <- c(below_50, i)
+    }
+}
+
+# [3] 
+# Print the number of items in above_50 and below_50
+length(above_50)
+length(below_50)
+
+# [4] 
+# Find the fraction of items that are above 50 & below 50 (using the original vector as the denominator)
+length(above_50)/length(vector)
+length(below_50)/length(vector)
+```
+
+# Part 3 
+In this excercise we are going to mimick visiting 18+ websites (to buy alcohol, of course..) and create code that checks a users D.O.B
+We will build up the code as we go along.
+```{R}
+# [1]
+# Use an if..else statement to check if the variable 'age' is above or below 18
+# If age is under 18, print "You are not old enough to purchase alcohol"
+# If 18+, print "Entering website"
+# The variable 'age' has been intialised, assign a number to it:
+
+age <- 18
+  
+if(age < 18){
+  print("You are not old enough to purchase alcohol")
+  } else{
+  print("Entering website")
+}
+
+# [2]
+# In the first part, we had to create the variable age. 
+# This time we will use the readline() function in R to prompt user input in the console
+# (the console is the bottom left box in R Studio) and assign it to the age variable
+# Recreate the if..else statement from step [1] using this new age variable
+
+age <- readline(prompt = "Please Enter Your Age: ")
+
+if(age < 18){
+  print("You are not old enough to purchase alcohol")
+} else{
+  print("Entering website")
+}
+
+# [3]
+# Lets make our readlines function a little more realistic. 
+# We will ask the user to enter their date of birth in the format: YYYY-MM-DD
+# Change the promt to: "Please Enter Your Age \nUse format YYYY-MM-DD: "
+# Wrap the readline() function in the 'as.Date()' function. 
+# This will let R know it is a date, not a character string. 
+
+age <- as.Date(readline(prompt = "Please Enter Your Age \nUse format YYYY-MM-DD: "))
+
+# [4]
+# Convert the variable age to a numeric. It will output the Date into days. 
+# Reproduce part [2] with your new as.Date(readline()) function, making sure to convert the
+# age variable to a numeric. hint 18 years = 6570 days..
+
+age <- as.Date(readline(prompt = "Please Enter Your Age \nUse format YYYY-MM-DD: "))
+
+age <- as.numeric(age)
+
+if(age < 6570){
+  print("You are not old enough to purchase alcohol")
+} else{
+    print("Entering Website")
+}
+
+```
+
+# Part 4
+You will learn about Fold Change for gene expression values and how to automate calculating them. Note: to view inline math equations like $\sum_{x = a}^{b} f(x)$, hover your cursor over the equation. The same applies for math code blocks ($$ $$): hover your cursor over the block to view the equations. Firstly, we will go over the concept of expression ratios and how to transform them.
+
+### Expression Ratios:
+The most common way to relate the change in gene expression between two conditions is to use an expression ratio. For our example, the expression for "treatment" is denoted by $R_{k}$, and the expression for the "control" is given by $G_{k}$. To get the expression ratio with respect to "treatment" (a biological state we are interested in comparing) we simply divide the treatment expression value by the control expression value for the gene in question (gene $k$). The expression ratio for gene k is denoted as $T_{k}$ given below:
+$$
+T_{k} = \frac{R_{k}}{G_{k}}
+$$
+A quick example:
+```{R}
+gene_a_treatment <- 346.6451
+gene_a_control <- 890.0661
+
+expression_ratio_gene_a <- gene_a_treatment / gene_a_control
+
+print(paste0("Expression Ratio for gene a: ", expression_ratio_gene_a))
+
+gene_b_treatment <- 286.9965
+gene_b_control <- 32.8747
+
+expression_ratio_gene_b <- gene_b_treatment / gene_b_control
+
+print(paste0("Expression Ratio for gene b: ", expression_ratio_gene_b))
+```
+
+In our example, we can see that gene_a is down-regulated in the treatment sample. Conversely, gene_b is upregulated in our treatment sample. When using expression ratios, down-regulated genes have a mapping space between 0 and 1. Up-regulated genes will have mapping space from 1 to infinity:
+$$
+Up-regulated \xrightarrow{\text{mapped}} [1, \infty] \\
+Down-regulated \xrightarrow{\text{mapped}} [0, 1]
+$$
+Whilst this is an intuitive method of calculating changes in gene expression, its mapping intervals are not equal, and cannot be used for downstream mathematical analyses. There are two methods one can use to represent changes in gene expression; [1] Inverse or reciprocal transformation and [2] Log2 transformation.
+
+### Inverse or Reciprocal Transformation:
+The inverse or reciprocal transformation converts the expression ratio into a fold-change, where for genes with an expression ratio of less than 1, the reciprocal of the expression ratio is multiplied by -1. If the expression ratio is greater than 1 then the fold change is equal to the expression ratio:
+$$
+Fold\: Change = \{T_{k} \; if \: T_{k} \geq 1\} \\
+                  or \\
+Fold\: Change = \{\frac{-1}{T_{k}} \; if \: T_{k} < 1 \}
+$$
+This method allows for an easy representation of expression ratios. For example if a gene is upregulated by 4, 4 > 1 = TRUE, thus the fold change remains 4. For a downregulated gene (1/4 = 0.25) then 0.25 < 1 = TRUE thus we calculate the inverse: -1/0.25 = -4. The advantage of such a transformation is that one can represent upregulation and down-regulation with a similar mapping intervals.
+
+However, this method also has a problem in that the mapping space is discontinuous between –1 and +1 and hence becomes a problem in most mathematical analyses downstream of this step. To remedy this, we can take the log2 transformation of the expression ratio.
+
+### Log2 Transformation
+A better transformation procedure is to take the logarithm base 2 value of the expression ratio (i.e. log2 (expression ratio)). This has the major advantage that it treats differential up-regulation and down-regulation equally, and also has a continuous mapping space. 
+
+For example, if the expression ratio is 1, then log2 (1) equals 0 representing no change in expression. If the expression ratio is 4, then log2 (4) equals +2 and for expression ratio of 1/4 we calculate log2 (1/4) equals -2. Thus, in this transformation the mapping space is continuous and upregulation and down-regulation are comparable.
+
+
+### Putting it all together:
+For this exercise we will write code to calculate the inverse transformation and the logarithmic base 2 transformation. Coding the formula given for the inverse transformation can be done using an if..else statement checking if our expression ratio is greater than or less than 1. 
+
+Before automating the process, your first task is to calculate the expression ratio of a gene, and then the inverse and log2 transformations. There is no need to use loops or conditional statements here, I first want you to code it manually to gain some intuition:
+```{R}
+set.seed(118) # do not change
+
+# [1]
+# Two simulated gene expression values have been generated for you:
+CXCL12_treatment <- runif(1, 0, 100)
+CXCL12_control <- runif(1, 0, 100)
+
+# [2]
+# Calculate the expression ratio for these genes 
+# hint: use the control as the denominator
+# assign the expr ratio to a variable 'CXCL12_exp_ratio'
+
+CXCL12_exp_ratio <- CXCL12_treatment / CXCL12_control
+
+# [3]
+# Print the expression ratio using print() and paste0()
+# Insert "The expression ratio for CXCL12 is: "
+
+print(paste0("The expression ratio for CXCL12 is: ", CXCL12_exp_ratio))
+
+```
+
+In the example above, you should get an expression ratio that is below 1. Lets apply the inverse transformation to it:
+```{R}
+# [4]
+# Calculate the inverse transformation. i.e -1/(expression ratio).
+# store it in the variable 'CXCL12_inverse'
+
+CXCL12_inverse <- -1/CXCL12_exp_ratio
+
+# [5]
+# Print it to the screen using print() and paste0()
+# Insert "The inverse transformation for CXCL12 is: "
+
+print(paste0("The inverse transformation for CXCL12 is: ", CXCL12_inverse))
+
+```
+
+You should see that CXCL12 has a fold change of factor ~ -20 in our treatment sample. 
+
+Now lets use the logarithmic base 2 transformation:
+```{R}
+# [6]
+# Calculate log2(expression ratio)
+# Store it in the variable 'CXCL12_log2'
+
+CXCL12_log2 <- log2(CXCL12_exp_ratio)
+
+# [7]
+# Print it using print() and paste0()
+# Insert "The log2 transformation of CXCL12 is: "
+
+print(paste0("The log2 transformation of CXCL12 is: ", CXCL12_log2))
+```
+
+You should get a down-regulated log2 value of ~ -4
+
+### Automating the process
+Two vectors have been generated for you: 'treatment' and 'control'. There are no gene names assigned to the expression values, so lets just assume that element 1 in each vector corresponds to the same gene. 
+```{R}
+set.seed(11384191) # do not change
+
+treatment <- c(sample(runif(10, 0, 1000)))
+control <- c(sample(runif(10, 0, 1000)))
+
+
+# [8]
+# Using a for loop, print out each element of 'treatment'
+
+for(i in treatment){
+  print(i)
+}
+
+# [9] 
+# i has been initialised for you (i <- 0)
+# using the same for loop, before the print statement, increase i by 1 (i <- i + 1)
+# Using print and paste0, print out ("Gene_",i," has an expression value of ", j)
+# This will assign arbitrary names to the genes like: gene_1, gene_2... gene_10.
+# hint: do not use for(i in treatment){}, assign a different variable such as j. i is already being used as an index.
+
+i <- 0 
+
+for(j in treatment){
+  i <- i + 1
+  print(paste0("Gene_",i," has an expression value of ", j))
+}
+```
+
+Now lets loop over both vectors simultaneously. To do this, we can use 'for(i in 1:length(treatment))' or 'for(i in 1:length(control))' to tell R that we want to assign a numeric of length treatment/control to i. R will expect that both vectors are of same length here or else it will return NAs if one is shorter than the other. Using '1:length' means that the for loop is not actually acessing each element of the vector treatment, it is using i as an index from 1 to 10. So when we assign the 'treatment_value <- treatment[i]' it will treat it as 'treatment[1]' ( = 346.6) not 'treatment[346.6]' (= NA).
+```{R}
+# [10]
+# Print values for treatment and control at the same time
+# hint: use for(i in 1:length(treatment)){}
+# hint: in the for loop code block, you will have to assign gene expression values for each vector to a variable in order to print them for each iteration 
+# Some of the code has been left in for to help you:
+  
+for(i in 1:length(treatment)){
+  treatment_value <- treatment[i]
+  control_value <- control[i]
+  print(paste0("Gene_",i," has an expression value of ", treatment_value, " in the treatment sample, and an expression value of ", control_value, " in the control sample"))
+}
+```
+
+Building on the previous code block, lets calculate the expression ratio.
+```{R}
+# [11]
+# using the same for(i in 1:lenght(treatment))...
+# assign a 3rd variable 'ratio' that is treatment_value / control_value
+# using print() and paste0(), print = "Gene_", i," expression ratio is ", ratio
+
+for(i in 1:length(treatment)){
+  treatment_value <- treatment[i]
+  control_value <- control[i]
+  ratio <- treatment_value / control_value
+  
+  print(paste0("Gene_",i," expression ratio is ", ratio))
+}
+```
+
+We will now introduce an if..else statement to check if the expression ratio is > 1. If true, assign the ratio to a variable 'fold change <- ratio'. If it evaluates FALSE (else), calculate the inverse (fold_change <- -1/ratio). An empty vector has been initialised for you 'fold_change_vector'. For both the if..else condition, you will add the newly calculated fold_change value to fold_change_vector using combine c().
+
+hint: before adding the newly calculated fold_change to the fold_change_vector, store it as a variable 'fold_change' in both the if and else code blocks. These variables will be overwritten in each iteration of the loop, but are being stored in 'fold_change_vector' on each iteration for us to access later. 
+```{R}
+# [12]
+# Building on the previous steps, calculate the inverse using an if..else statement
+# after assigning values to 'treatment_value', 'control_value' and 'ratio', begin the if..else statement
+
+# fold_change_vector to store output initialised:
+fold_change_vector <- c()
+
+for(i in 1:length(treatment)){
+  treatment_value <- treatment[i]
+  control_value <- control[i]
+  ratio <- treatment_value / control_value
+  
+  if(ratio > 1){
+    fold_change <- ratio
+    fold_change_vector <- c(fold_change_vector, fold_change)
+  } else{
+    fold_change <- -1/ratio
+    fold_change_vector <- c(fold_change_vector, fold_change)
+  }
+}
+
+# [13]
+# print the fold_change_vector
+print(fold_change_vector)
+```
+
+Finally, calculate the log2 transformation of the expression ratio. There is no need to use an if..else in this loop.
+```{R}
+# [14]
+# loop over both vectors, and calculate the ratio like before
+# apply the log2() to ratio, storing it as 'log2' and add it to 'log2_vector' using combine c()
+
+# log2 vector to store output initialised:
+log2_vector <- c()
+
+for(i in 1:length(treatment)){
+  treatment_value <- treatment[i]
+  control_value <- control[i]
+  ratio <- treatment_value / control_value
+  
+  log2 <- log2(ratio)
+  log2_vector <- c(log2_vector, log2)
+}
+
+# [15]
+# print out the log2_vector
+print(log2_vector)
+```
