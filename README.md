@@ -50,16 +50,19 @@ A gentle introduction to Spyder GUI and the Python programming language, coverin
 Resources will be released on `20/04/2020`.
 
 #### Zoom meeting
-* `Thursday 23rd 2-3pm`
+* `Thursday 23rd 2-4pm`
 
 ***
 
 ## Week 3 (27/04/2020)
 #### Introduction to R (part 2)
+Working with matrices in R, reading text/csv files into dataframes and performing maniuplations, operations and subsetting using base `R` functions. 
 
 #### Introduction to Python (part 2)
+Working with dataframes in Python using `numpy` and `pandas` libraries. Perform operations and tasks on the dataframes and write to files. 
 
 #### Zoom meeting
+`Thursday 30th 2-4pm`. 
 ***
 
 ## Week 4 (04/05/2020)
