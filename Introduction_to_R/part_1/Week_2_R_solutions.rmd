@@ -118,15 +118,14 @@ if(age < 18){
 age <- as.Date(readline(prompt = "Please Enter Your Age \nUse format YYYY-MM-DD: "))
 
 # [4]
-# Convert the variable age to a numeric. It will output the Date into days. 
-# Reproduce part [2] with your new as.Date(readline()) function, making sure to convert the
-# age variable to a numeric. hint 18 years = 6570 days..
+# lets use todays date as the origin and figure out how many days we have clocked
+# difftime() is a base function to calculate the difference between 2 date objects. 
 
 age <- as.Date(readline(prompt = "Please Enter Your Age \nUse format YYYY-MM-DD: "))
+today <- Sys.Date()
+diff <- as.numeric(difftime(today, age, units = "days"))
 
-age <- as.numeric(age)
-
-if(age < 6570){
+if(diff < 6570){
   print("You are not old enough to purchase alcohol")
 } else{
     print("Entering Website")
