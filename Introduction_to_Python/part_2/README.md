@@ -8,7 +8,7 @@ Next week is visualisation and the main thing which will help you visualise your
 
 ## Important topics to remember from last week
 
-Variable updating
-List/tuple indexing notation
-True/False boolean values
-Flow control
+Variable updating  
+List/tuple indexing notation  
+True/False boolean values  
+Flow control  
