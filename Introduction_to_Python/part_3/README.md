@@ -7,3 +7,6 @@ Secondly, we are introducing the Jupyter notebook (the files with `.ipynb` file 
 
 When you attempt the worksheets, you can do so either in Spyder or by creating your own Jupter Notebook file. It is likely that your solutions are going to look quite a bit different than the sample solutions we will give you, that's OK! With coding, and especially with plotting, there are often many ways of going about the same thing.
 
+
+**If you are having any trouble getting Jupyter Notebook running, just view the ipynb file online here and copy / paste the code cells into Spyder. ** 
+
