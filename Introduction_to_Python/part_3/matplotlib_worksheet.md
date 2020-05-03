@@ -11,7 +11,7 @@ Create a simple lineplot of cumulative coronavirus deaths in Ireland vs. United 
 If this looks a little hard to read, try to adjust the scale (maybe plot on a log scale?). 
 
 
-**Hint - use np.log() for transformations if using matplotlib**
+**Hint - use np.log() for transformations if using matplotlib - ie use np.log(data) inside the plot object**
 
 Try adding another country to this comparison - I would suggest France
 
