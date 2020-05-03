@@ -2,18 +2,18 @@
 
 ### Contents:
 
-- [Introduction](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/Data_Visualisation_in_R-Learning_Materials.md#introduction)
-- [Plotting in base R](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/Data_Visualisation_in_R-Learning_Materials.md#plotting-in-base-r)
-- [Plotting with `ggplot2`](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/Data_Visualisation_in_R-Learning_Materials.md#plotting-with-ggplot2)
-  - [*Tidy data*](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/Data_Visualisation_in_R-Learning_Materials.md#tidy-data)
-  - [*A Grammar of Graphics*](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/Data_Visualisation_in_R-Learning_Materials.md#a-grammar-of-graphics)
-  - [*Building a ggplot*](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/Data_Visualisation_in_R-Learning_Materials.md#building-a-ggplot)
-  - [*Saving your work*](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/Data_Visualisation_in_R-Learning_Materials.md#saving-your-work)
+- [Introduction](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/Data_Visualisation_in_R-Learning_Materials.md#introduction)
+- [Plotting in base R](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/Data_Visualisation_in_R-Learning_Materials.md#plotting-in-base-r)
+- [Plotting with `ggplot2`](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/Data_Visualisation_in_R-Learning_Materials.md#plotting-with-ggplot2)
+  - [*Tidy data*](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/Data_Visualisation_in_R-Learning_Materials.md#tidy-data)
+  - [*A Grammar of Graphics*](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/Data_Visualisation_in_R-Learning_Materials.md#a-grammar-of-graphics)
+  - [*Building a ggplot*](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/Data_Visualisation_in_R-Learning_Materials.md#building-a-ggplot)
+  - [*Saving your work*](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/Data_Visualisation_in_R-Learning_Materials.md#saving-your-work)
 
-- [Other packages and resources](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/Data_Visualisation_in_R-Learning_Materials.md#other-packages-and-resources)
-  - [*Packages*](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/Data_Visualisation_in_R-Learning_Materials.md#packages)
-  - [*Resources*](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/Data_Visualisation_in_R-Learning_Materials.md#resources)
-- [Summary](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/Data_Visualisation_in_R-Learning_Materials.md#summary) 
+- [Other packages and resources](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/Data_Visualisation_in_R-Learning_Materials.md#other-packages-and-resources)
+  - [*Packages*](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/Data_Visualisation_in_R-Learning_Materials.md#packages)
+  - [*Resources*](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/Data_Visualisation_in_R-Learning_Materials.md#resources)
+- [Summary](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/Data_Visualisation_in_R-Learning_Materials.md#summary) 
 
 <br/>
 
@@ -58,7 +58,7 @@ Functions such as `plot`, `hist`, `boxplot` and `barplot` won't necessarily prod
   
   
   <p align='center'>
-  <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/basic_plot.png' width=60%>
+  <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/basic_plot.png' width=60%>
   </p>
   
   ```R
@@ -66,7 +66,7 @@ Functions such as `plot`, `hist`, `boxplot` and `barplot` won't necessarily prod
   ```
   
   <p align='center'>
-      <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/basic_plot2.png' width=60%>
+      <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/basic_plot2.png' width=60%>
   </p>
   
   
@@ -136,7 +136,7 @@ Functions such as `plot`, `hist`, `boxplot` and `barplot` won't necessarily prod
   ```
   
   <p align='center'>
-      <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/cov_plot.png' width=80%>
+      <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/cov_plot.png' width=80%>
   </p>
   
   </details>
@@ -166,7 +166,7 @@ Functions such as `plot`, `hist`, `boxplot` and `barplot` won't necessarily prod
   ```
 
   <p align='center'>
-      <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/other_base_plots.png' width=80%>
+      <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/other_base_plots.png' width=80%>
   </p>
 
   </details>
@@ -187,7 +187,7 @@ Functions such as `plot`, `hist`, `boxplot` and `barplot` won't necessarily prod
 `ggplot2` is an R package for data visualisation that was created by Hadley Wickham in 2005 and is also a part of the [tidyverse](https://www.tidyverse.org/) - a collection of R packages for data science. These packages all share an underlying design philosophy based on the concept of 'tidy data'. You don't need to know how to use other tidyverse packages to use `ggplot2` but you should make sure your data is in 'tidy' format. This means that your data is stored in a dataframe where each row represents an observation and each column represents a variable. For example, `ggplot2` comes with a pre-loaded dataset called `mpg` - a dataframe that describes the fuel economy of different car models and can be viewed by running `data(mpg)`, followed by `View(mpg)`. Here, the observations are cars, so each row represents a single car and the variables (columns) are manufacturer, model, year etc. (to learn more about `mpg`, open its help page by running `?mpg`).
 
 <p align=center>
-    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/mpg.png' width=68%>
+    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/mpg.png' width=68%>
 </p>
 
 <br/><br/>
@@ -197,7 +197,7 @@ Functions such as `plot`, `hist`, `boxplot` and `barplot` won't necessarily prod
 `ggplot2` is inpired by Leland Wilkinson's concept of a *Grammar of Graphics*  - which is a general scheme for building up data visualisations from semantic layers of components and is also the basis of many other data visualisation tools such as Vega-Lite and Tableau. Graphs are made up of a set of fundamental layers (shown below) - by defining each of these layers it is possible to plot virtually anything. Although this may seem more clunky and convoluted than plotting in base R, it is ultimately way more powerful.
 
 <p align=center>
-    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/gg.png' width=35%>
+    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/gg.png' width=35%>
 </p>
 
 <br/><br/>
@@ -207,7 +207,7 @@ Functions such as `plot`, `hist`, `boxplot` and `barplot` won't necessarily prod
 ggplots are built in steps by first initialising the plot with the `ggplot()` function and then sequentially adding layers to the plot using other `ggplot2` functions. 
 
 <p align=center>
-    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/ggplot_example.gif'>
+    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/ggplot_example.gif'>
 </p>
 
 <details>
@@ -244,7 +244,7 @@ A basic `ggplot()` call will look something like this: `ggplot(data = mpg, aes(x
 If you tried running any of the snippets above to initialise a plot, you'll notice that nothing actually gets plotted by this call, it just draws a blank canvas. This is because we need to define the geometry layer and tell ggplot which type of plot we would like to draw. `ggplot2` defines the geometry layer by different geoms which are geometrical objects that a plot uses to represent data. Different geoms can be used to plot the same data. For example `geom_point()` will plot a scatterplot and `geom_smooth()` will plot a smooth line through the points. It is also possible to add multiple geoms to the same plot.
 
 <p align=center>
-    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/geoms.gif'>
+    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/geoms.gif'>
 </p>
 
 <details>
@@ -279,7 +279,7 @@ For a full list of available geoms see [here](https://ggplot2.tidyverse.org/refe
 Different geoms have different aesthetic mapping requirements - for example, to draw a scatterplot `geom_point()` requires an x *and* y aesthetic, whereas to draw a histogram `geom_histogram()` will only accept *either* an x or y aesthetic. To see what arguments and aesthetics each geom will accept, you can run `?geom_X` (where X is whichever geom you're interested in). You will notice that it's also possible to define your aesthetic mappings in your `geom_X()` call as well as in your initialising `ggplot()` call, it shouldn't make a difference either way. You can also set fixed aesthetics in your `geom_X()` call  - for example if we wanted to uniformly change the colour or size of all points on a scatterplot, you can specify this in your `geom_point()` call as shown below. *Note:* this is different to defining an aesthetic mapping using `aes()` because here, the colour/size of points doesn't actually tell us anything about any of the variables in the data.
 
 <p align=center>
-    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/geom_point.png'>
+    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/geom_point.png'>
 </p>
 
 <details>
@@ -304,7 +304,7 @@ ggplot(data = mpg, aes(x = hwy, y = displ)) +
 The next layer of the plot that we can customise is the scales layer. For each aesthetic that you include in your `aes()` call, there is a corresponding scale that can be modified. For example, if you've defined x and y aesthetics, you can alter the x and y axis to have fixed limits or a fixed number of breaks. The function you use to update the x or y axis in this case will depend on whether the axes represent continuous or categorical variables. If the x axis represents a categorical variable you would use `scale_x_discrete()`, whereas if a continuous variable is being mapped to the x axis you would use `scale_x_continuous()` (for y axis, just replace x with y).
 
 <p align=center>
-    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/scales.gif'>
+    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/scales.gif'>
 </p>
 
 <details>
@@ -322,7 +322,7 @@ ggplot(data = mpg, aes(x = class, y = displ)) + # initialise plot
 In the same way that there are scale functions to adjust the x and y aesthetics, there are also scale functions for other aesthetics including colour, size, shape and alpha. See shape example below.
 
 <p align=center>
-    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/scale_shapes.png'>
+    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/scale_shapes.png'>
 </p>
 
 <details>
@@ -350,8 +350,8 @@ ggplot(mpg, aes(x = hwy, y = displ, shape = as.factor(year))) +
 If you're including colour as an aesthetic in your graph there are many ways to adjust the scales. If the colour is being mapped to a categorical variable, the easiest way is to use `scale_colour_manual()` - similar to `scale_shape_manual()` above - and specifying the colors you want to use. You can use strings e.g. 'red' to specify a colour or you can use hex colours (a six-digit combination of numbers and letters defined by its mix of red, green and blue, see [here](https://htmlcolorcodes.com/)). You can also use a predefined colour palette, such as the ones in the [RColorBrewer](https://rdrr.io/cran/RColorBrewer/man/ColorBrewer.html) package, using `scale_colour_brewer()`. If your variable is continuous you have similar options i.e. `scale_colour_continuous()` and `scale_colour_distiller()`. Some examples below.
 
 <p align=center>
-    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/cat_cols.gif'>
-    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/con_cols.gif'>
+    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/cat_cols.gif'>
+    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/con_cols.gif'>
 </p> 
 
 <details>
@@ -396,8 +396,8 @@ Faceting is a feature of `ggplot2` that allows you to split your plot into facet
 <br/>
 
 <p align=center>
-    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/dens.png' width=45%>
-    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/facets.png' width=45%>
+    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/dens.png' width=45%>
+    <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/facets.png' width=45%>
 </p>
 
 <details>
@@ -427,7 +427,7 @@ ggplot(mpg, aes(x = displ, fill = class)) +
 The default coordinate system in `ggplot2` is the Cartesian coordinate system where the x and y positions act independently to determine the location of each point. Occasionally (but not often), it is useful to be able to modify the coordinate system. For example, if you wanted to zoom in on a section of a plot, you can define x or y limits with `coord_cartesian()` - this is subtly different from setting x and y limits using `scale_x_X()` or `scale_y_X()` as those functions will remove points outside the limits from the plot whereas using `coord_cartesian()` just zooms in on a specific region of the plot so that points outside the limits are still there but we just can't see them anymore. Other coordinate functions that are sometimes useful are `coord_flip()` which will flip the x and y axis, and `coord_polar()` which converts coordinates to polar coordinates (useful for radar charts or pie charts). Examples of use cases for these functions are shown below.
 
  <p align=center>    
-     <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/coords.gif'>   
+     <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/coords.gif'>   
 </p>
 
 <details>
@@ -458,7 +458,7 @@ p + coord_polar()
 The final customisable layer of the graph is the theme, which relates to almost every part of the graph except the data points themselves. `ggplot2` comes with several pre-defined themes baked in (see 'Complete themes' [here](https://ggplot2.tidyverse.org/reference/#section-themes)), the default of which is `theme_grey()`, which is what is responsible for the grey background in all the ggplots we've created so far. To update the theme of your plot, just add a `+ theme_X()` call to your plot, where X is one of grey, bw, classic, linedraw, etc. See examples of the exact same plot but with different themes below.
 
  <p align=center>    
-     <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/themes.gif'>   
+     <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/themes.gif'>   
 </p>
 
 <details>
@@ -481,7 +481,7 @@ p + theme_dark()
 It is also possible to tweak the display of different components of an existing theme. For example, in the plot above you'll notice that text on the x axis is overlapping and impossible to read. We can fix this by using `theme()` to rotate the x axis text by 90&deg;.
 
  <p align=center>    
-     <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/theme.gif'>   
+     <img src='https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/theme.gif'>   
 </p>
 
 <details>

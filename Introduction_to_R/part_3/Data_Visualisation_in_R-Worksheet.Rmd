@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-This worksheet accompanies the [Data Visualisation in R - Learning Materials](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/Data_Visualisation_in_R-Learning_Materials.md) on GitHub. Solutions to this worksheet will be uploaded to GitHub on Thursday 7th May and I will go through all solutions at the Zoom conference at 2pm. 
+This worksheet accompanies the [Data Visualisation in R - Learning Materials](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/Data_Visualisation_in_R-Learning_Materials.md) on GitHub. Solutions to this worksheet will be uploaded to GitHub on Thursday 7th May and I will go through all solutions at the Zoom conference at 2pm. 
 
 To complete this worksheet you will need to use the `ggplot2` package. Load it now by running the code chunk below. 
 
@@ -35,7 +35,7 @@ The dataset you're going to be visualising for this worksheet consists of single
 Given that this is a data *visualisation* tutorial and not a data *analysis* tutorial, I've done most of the heavy lifting for you and created a tidy csv file with the results which you can load into R by running the code block below.  
 
 ```{r, read_data}
-pbmc_data <- read.csv('https://raw.githubusercontent.com/Genomics-CRT/Data-Science-For-Life-Science/master/Introduction_to_R/Part_3/pbmc_data.csv') # reads in file from GitHub and saves it as pbmc_data dataframe
+pbmc_data <- read.csv('https://raw.githubusercontent.com/Genomics-CRT/Data-Science-For-Life-Science/master/Introduction_to_R/part_3/pbmc_data.csv') # reads in file from GitHub and saves it as pbmc_data dataframe
 ```
 
 <br>
@@ -70,7 +70,7 @@ sort(table(pbmc_data$cell_type), decreasing = T) # generate a table of counts fo
 
 Your first task is to build a bar chart using `ggplot2` to visualise how many of each cell type are present in the data. Your finished graph should look something like this:
 
-![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/fig1.png?raw=true)
+![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/fig1.png?raw=true)
 
 <br>
 
@@ -107,7 +107,7 @@ ggplot(data = pbmc_data, aes(x = cell_type, fill = cell_type)) + # initialise th
 
 Your next task is to create a scatterplot using the `UMAP1` and `UMAP2` columns as x and y coordinates respectively. Colour the points by cell type. Your finished plot should look something like this:
 
-![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/fig2.png?raw=true)
+![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/fig2.png?raw=true)
 
 <br>
 
@@ -132,7 +132,7 @@ ggplot(data = pbmc_data, aes()) +
 
 Recreate the scatterplot but this time map colour to the expression of CST3. Your finished plot should look something like this:
 
-![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/fig3.png?raw=true)
+![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/fig3.png?raw=true)
 
 <br>
 
@@ -159,7 +159,7 @@ What do you notice about CST3 expression? If you try recreating the plot for CD3
 
 The next task is to visualise the distribution of CST3 expression in different cell types using a violin plot. I like to combine violin plots with a stripchart to show the individual datapoints as it can be helpful when comparing groups of unequal sizes to get an idea of how many datapoints are in each group. Your finished plot should look something like this:
 
-![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/fig4.png?raw=true)
+![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/fig4.png?raw=true)
 
 <br>
 
@@ -227,7 +227,7 @@ Use the `head()` function to take a look at the `avg_exp_df` dataframe and make 
 
 Now we have the data in the correct format to create a heatmap that shows the average expression of each gene in each cell type. Your finished graph should look something like this:
 
-![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/fig5.png?raw=true)
+![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/fig5.png?raw=true)
 
 <br>
 

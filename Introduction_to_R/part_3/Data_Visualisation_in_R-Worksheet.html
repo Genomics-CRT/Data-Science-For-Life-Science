@@ -368,7 +368,7 @@ summary {
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>This worksheet accompanies the <a href="https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/Data_Visualisation_in_R-Learning_Materials.md">Data Visualisation in R - Learning Materials</a> on GitHub. Solutions to this worksheet will be uploaded to GitHub on Thursday 7th May and I will go through all solutions at the Zoom conference at 2pm.</p>
+<p>This worksheet accompanies the <a href="https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/Data_Visualisation_in_R-Learning_Materials.md">Data Visualisation in R - Learning Materials</a> on GitHub. Solutions to this worksheet will be uploaded to GitHub on Thursday 7th May and I will go through all solutions at the Zoom conference at 2pm.</p>
 <p>To complete this worksheet you will need to use the <code>ggplot2</code> package. Load it now by running the code chunk below.</p>
 <pre class="r"><code>if (!require(&quot;ggplot2&quot;)){ # check if ggplot2 is installed and install it if not
   install.packages(&quot;ggplot2&quot;)}
@@ -381,7 +381,7 @@ library(ggplot2) # load ggplot2</code></pre>
 <div id="data-exploration" class="section level2">
 <h2>Data Exploration</h2>
 <p>Given that this is a data <em>visualisation</em> tutorial and not a data <em>analysis</em> tutorial, I’ve done most of the heavy lifting for you and created a tidy csv file with the results which you can load into R by running the code block below.</p>
-<pre class="r"><code>pbmc_data &lt;- read.csv('https://raw.githubusercontent.com/Genomics-CRT/Data-Science-For-Life-Science/master/Introduction_to_R/Part_3/pbmc_data.csv') # reads in file from GitHub and saves it as pbmc_data dataframe</code></pre>
+<pre class="r"><code>pbmc_data &lt;- read.csv('https://raw.githubusercontent.com/Genomics-CRT/Data-Science-For-Life-Science/master/Introduction_to_R/part_3/pbmc_data.csv') # reads in file from GitHub and saves it as pbmc_data dataframe</code></pre>
 <p><br></p>
 <p>Run the following code block to take a look at the structure of the dataframe and see what observations/variables it contains.</p>
 <pre class="r"><code>head(pbmc_data) # shows the first 6 rows of the df
