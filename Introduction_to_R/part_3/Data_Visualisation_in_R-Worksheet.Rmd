@@ -1,0 +1,261 @@
+---
+title: "Data Visualisation in R - Worksheet"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+## Introduction
+
+This worksheet accompanies the [Data Visualisation in R - Learning Materials](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/Data_Visualisation_in_R-Learning_Materials.md) on GitHub. Solutions to this worksheet will be uploaded to GitHub on Thursday 7th May and I will go through all solutions at the Zoom conference at 2pm. 
+
+To complete this worksheet you will need to use the `ggplot2` package. Load it now by running the code chunk below. 
+
+```{r, load_ggplot, warning=FALSE, message=FALSE}
+if (!require("ggplot2")){ # check if ggplot2 is installed and install it if not
+  install.packages("ggplot2")}
+
+library(ggplot2) # load ggplot2
+```
+
+
+The dataset you're going to be visualising for this worksheet consists of single-cell gene expression data from ~2,500 peripheral blood mononuclear blood cells (PBMCs) (raw data available from [this link](https://support.10xgenomics.com/single-cell-gene-expression/datasets/1.1.0/pbmc3k)). 
+
+<br>
+
+---
+
+## Data Exploration 
+
+Given that this is a data *visualisation* tutorial and not a data *analysis* tutorial, I've done most of the heavy lifting for you and created a tidy csv file with the results which you can load into R by running the code block below.  
+
+```{r, read_data}
+pbmc_data <- read.csv('https://raw.githubusercontent.com/Genomics-CRT/Data-Science-For-Life-Science/master/Introduction_to_R/Part_3/pbmc_data.csv') # reads in file from GitHub and saves it as pbmc_data dataframe
+```
+
+<br>
+
+Run the following code block to take a look at the structure of the dataframe and see what observations/variables it contains. 
+
+```{r, explore_data, eval=FALSE, echo=TRUE}
+head(pbmc_data) # shows the first 6 rows of the df
+dim(pbmc_data) # tells you how many rows/columns
+colnames(pbmc_data) # shows column names
+```
+
+<br>
+
+Our observations in this case are 2,638 individual cells, each of which has a cell type label (column 1), an expression value for 12 different genes (columns 2 - 13) and UMAP1/2 coordinates (columns 14 & 15). The UMAP coordinates result from running a clustering algorithm that produces a graph where cells with similar gene expression profiles are clustered together. 
+
+To see how many different cell types are included in this dataset and how many of each cell type are present, run the following code block.
+
+```{r, cell_types, eval=F, echo=TRUE}
+sort(table(pbmc_data$cell_type), decreasing = T) # generate a table of counts for each cell type and sort it in increasing order
+```
+
+<br>
+
+----
+
+## Data Visualisation
+
+<br>
+
+#### 1. Bar Chart
+
+Your first task is to build a bar chart using `ggplot2` to visualise how many of each cell type are present in the data. Your finished graph should look something like this:
+
+![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/fig1.png?raw=true)
+
+<br>
+
+**Here are some hints:**
+
+- Aesthetics - The x axis should represent cell type, the fill of each bar should also represent cell type.
+
+- Geometries - Use `geom_bar()`. It should automatically count how many of each cell type there are and map this to the y axis.
+
+- Scales - Use `scale_fill_manual()` to change the fill from the default colours to the vector of `cell_colours` that I've provided for you. Use `scale_x_discrete()` to change the limits of the x axis so that cell types are ordered from most to least abundant instead of alphabetically (the default).
+
+- Coordinates - Use `coord_flip()` to turn it into a horizontal bar chart.
+
+- Theme - Change from the default theme to `theme_linedraw()`. 
+
+<br>
+
+I've included a very basic template below to get you started.
+
+<br>
+
+```{r, bar_chart, fig.show='hide'}
+cell_colours <- c("#FCABCC", "#E4DD68", "#797CD9", "#ED4030", "#C363C7", "#9FD391", "#FE9134", "#96CBFE") # vector of colours to use instead of the default colours
+
+ggplot(data = pbmc_data, aes(x = cell_type, fill = cell_type)) + # initialise the plot
+  geom_bar() # plot a bar chart
+```
+
+<br>
+
+-----
+
+#### 2. Scatterplot
+
+Your next task is to create a scatterplot using the `UMAP1` and `UMAP2` columns as x and y coordinates respectively. Colour the points by cell type. Your finished plot should look something like this:
+
+![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/fig2.png?raw=true)
+
+<br>
+
+**Some hints:**
+
+- Aesthetics - The x and y axis should represent UMAP1 and UMAP2. Use colour to represent cell type.
+
+- Geometries - Use `geom_point()`.
+
+- Scales - Use `scale_colour_manual()` to change from the default colours to the vector of `cell_colours` I provided for you above.
+
+- Theme - Use `theme_classic()`.
+
+<br>
+
+```{r, scatter_1, echo=TRUE, eval=FALSE}
+ggplot(data = pbmc_data, aes()) +
+  geom_point()
+```
+
+<br>
+
+Recreate the scatterplot but this time map colour to the expression of CST3. Your finished plot should look something like this:
+
+![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/fig3.png?raw=true)
+
+<br>
+
+All hints from above remain valid except now colour is representing a continuous variable instead of a categorical variable so you should use `scale_colour_gradientn()` to change from the default colours to the vector of `gradient_colours` that I've provided for you. 
+
+<br>
+
+```{r, scatter_2, echo=TRUE, eval=FALSE}
+gradient_colours <- c("#0D0887FF", "#CC4678FF", "#F0F921FF") # colours to use for scale_colour_gradientn()
+
+ggplot(data = pbmc_data, aes()) +
+  geom_point()
+```
+
+<br>
+
+What do you notice about CST3 expression? If you try recreating the plot for CD3E and MS4A1 expression, you'll notice that these genes are more highly expressed in some clusters than in others.
+
+<br>
+
+----
+
+#### 3. Violin plot
+
+The next task is to visualise the distribution of CST3 expression in different cell types using a violin plot. I like to combine violin plots with a stripchart to show the individual datapoints as it can be helpful when comparing groups of unequal sizes to get an idea of how many datapoints are in each group. Your finished plot should look something like this:
+
+![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/fig4.png?raw=true)
+
+<br>
+
+**Some hints:**
+
+- Aesthetics - The x axis should represent cell type, the y axis should represent CST3 expression and the fill of the violins should represent cell type.
+
+- Geometries - Use `geom_violin()` to create the violin plot and `geom_jitter()` to overlay the stripchart. Adjust the size and alpha of the `geom_jitter()` points to make them smaller and more transparent.
+ 
+- Scales - Use `scale_fill_manual()` to change the fill colours to the vector of `cell_colours` I provided above. 
+
+- Theme - Use `theme_linedraw()` instead of the default theme. Use `theme()` to rotate the x axis labels by 90 degrees.
+
+<br>
+
+```{r, violin, eval=FALSE, echo=TRUE}
+ggplot(pbmc_data, aes()) +
+  geom_violin() +
+  geom_jitter()
+```
+
+<br>
+
+*Which cell types have the highest expression of CST3?*
+
+<br>
+
+----
+
+#### 4. Heatmap
+
+The final task is to create a heatmap that shows the average expression value of each gene in each cell type. This will require some data wrangling. Run the code block below to get a new dataframe with 3 columns - cell_type, gene and avg_exp_value.  
+
+<br>
+
+```{r, get_avg_exp}
+cell_types <- as.character(unique(pbmc_data$cell_type)) # create a vector of cell types
+genes <- colnames(pbmc_data)[2:13] # create a vector of genes
+avg_values <- c() # create an empty vector to store avg. expression values
+
+for(i in cell_types){ # loop through cell types
+  sub <- subset(pbmc_data, pbmc_data$cell_type == i) # take a subset of the main dataframe containing only cell type i
+  avg_values <- c(avg_values, colMeans(sub[2:13])) # get the average of each of the gene columns in the subsetted dataframe and append them to the avg_values vector
+}
+
+avg_exp_df <- data.frame(cell_type = rep(cell_types, each = 12), # create a new dataframe to store the avg expression data
+                         gene = rep(genes, 8),
+                         avg_exp = avg_values)
+
+
+# Note: If the code above scares you, there is a simpler way to do it using the dplyr and tidyr R packages. If you have these packages installed you can uncomment the following code and run it to get the same dataframe that's being produced above.
+
+#library(dplyr)
+#library(tidyr)
+#avg_exp_df <- pbmc_data %>% 
+#                select(-c(UMAP1, UMAP2)) %>%
+#                group_by(cell_type) %>% 
+#                summarise_all(mean) %>%
+#                pivot_longer(cols = 2:13, names_to = 'gene', values_to = 'avg_exp')
+```
+
+<br>
+
+Use the `head()` function to take a look at the `avg_exp_df` dataframe and make sure you understand what's in it.
+
+Now we have the data in the correct format to create a heatmap that shows the average expression of each gene in each cell type. Your finished graph should look something like this:
+
+![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/Part_3/imgs/fig5.png?raw=true)
+
+<br>
+
+**Some hints:**
+
+- Aesthetics - The x axis should represent gene, the y axis should represent cell type and the fill of the squares should represent the average expression value.
+
+- Geometries - Use `geom_tile()`.
+
+- Scales - Average expression is another continuous variable so use `scale_fill_gradientn()` to change from the default fill colours to the vector of  `gradient_colours` I provided above.
+
+- Theme - Use `theme()` to rotate the x axis labels by 90 degrees and change the fill of the panel background from the default grey to white.
+
+<br>
+
+```{r, heatmap, eval=FALSE, echo=TRUE}
+ggplot(avg_exp_df, aes()) +
+  geom_tile()
+```
+
+<br>
+
+----
+
+## Troubleshooting:
+
+- If you have any questions about this tutorial or you encounter any errors, you can post your issues on the ['Issues' tab of the GitHub](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/issues). Where possible, include a clear example of your code and the error message that you're receiving.
+
+- Remember, Google is your friend and most of the answers you're looking for are probably already on [StackOverflow](https://stackoverflow.com/).
+
+- Feel free to email me any data viz questions - s.ennis6@nuigalway.ie.
