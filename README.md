@@ -67,10 +67,13 @@ Working with dataframes in Python using `numpy` and `pandas` libraries. Perform 
 
 ## Week 4 (04/05/2020)
 #### Introduction to R (part 3)
+This tutorial covers creating plots using base R and is extended to cover the `ggplot` package. Further packages for visualizations are provided in the teaching materials. 
 
 #### Introduction to Python (part 3)
+This tutorial covers creating plots in Python, using the popular `matplotlib` library and the increasingly popular `seaborn` library. 
 
 #### Zoom meeting
+`Thursday 7th 2-4pm`
 ***
 
 ## Week 5 (11/05/2020)
