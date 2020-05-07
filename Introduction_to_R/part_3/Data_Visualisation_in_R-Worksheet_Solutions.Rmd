@@ -1,0 +1,409 @@
+---
+title: "Data Visualisation in R - Worksheet"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{css, echo=FALSE}
+.solution {
+  background-color: #FDFBD3;
+}
+```
+
+## Introduction
+
+This documents contains the solutions to the worksheet that accompanies the [Data Visualisation in R - Learning Materials](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/Data_Visualisation_in_R-Learning_Materials.md) on GitHub. I will go through all solutions at the Zoom conference at 2pm on Thursday 7th May. 
+
+To complete this worksheet you will need to use the `ggplot2` package. Load it now by running the code chunk below. 
+
+```{r, load_ggplot, warning=FALSE, message=FALSE}
+if (!require("ggplot2")){ # check if ggplot2 is installed and install it if not
+  install.packages("ggplot2")}
+
+library(ggplot2) # load ggplot2
+```
+
+The dataset we're going to be visualising for this worksheet consists of single-cell gene expression data from ~2,500 peripheral blood mononuclear blood cells (PBMCs) (raw data available from [this link](https://support.10xgenomics.com/single-cell-gene-expression/datasets/1.1.0/pbmc3k)). 
+
+<br>
+
+---
+
+## Data Exploration 
+
+Given that this is a data *visualisation* tutorial and not a data *analysis* tutorial, I've done most of the heavy lifting for you and created a tidy csv file with the results which you can load into R by running the code block below.  
+
+```{r}
+pbmc_data <- read.csv('https://raw.githubusercontent.com/Genomics-CRT/Data-Science-For-Life-Science/master/Introduction_to_R/part_3/pbmc_data.csv') # reads in file from GitHub and saves it as pbmc_data dataframe
+```
+
+<br>
+
+Run the following code block to take a look at the structure of the dataframe and see what observations/variables it contains. 
+
+```{r, explore_data}
+head(pbmc_data) # shows the first 6 rows of the df
+dim(pbmc_data) # tells you how many rows/columns
+colnames(pbmc_data) # shows column names
+```
+
+<br>
+
+Our observations in this case are 2,638 individual cells, each of which has a cell type label (column 1), an expression value for 12 different genes (columns 2 - 13) and UMAP1/2 coordinates (columns 14 & 15). The UMAP coordinates result from running a clustering algorithm that produces a graph where cells with similar gene expression profiles are clustered together. 
+
+To see how many different cell types are included in this dataset and how many of each cell type are present, run the following code block.
+
+```{r, cell_types}
+sort(table(pbmc_data$cell_type), decreasing = T) # generate a table of counts for each cell type and sort it in decreasing order
+```
+
+<br>
+
+----
+
+## Data Visualisation
+
+<br>
+
+#### 1. Bar Chart
+
+Your first task is to build a bar chart using `ggplot2` to visualise how many of each cell type are present in the data. Your finished graph should look something like this:
+
+![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/fig1.png?raw=true)
+
+<br>
+
+**Here are some hints:**
+
+- Aesthetics - The x axis should represent cell type, the fill of each bar should also represent cell type.
+
+- Geometries - Use `geom_bar()`. It should automatically count how many of each cell type there are and map this to the y axis.
+
+- Scales - Use `scale_fill_manual()` to change the fill from the default colours to the vector of `cell_colours` that I've provided for you. Use `scale_x_discrete()` to change the limits of the x axis so that cell types are ordered from most to least abundant instead of alphabetically (the default).
+
+- Coordinates - Use `coord_flip()` to turn it into a horizontal bar chart.
+
+- Theme - Change from the default theme to `theme_linedraw()`. 
+
+<br>
+
+```{r, bar_chart_text, fig.width=12, fig.height=8, class.source='solution'}
+cell_colours <- c("#FCABCC", "#E4DD68", "#797CD9", "#ED4030", "#C363C7", "#9FD391", "#FE9134", "#96CBFE") # vector of colours to use instead of the default colours
+
+
+ggplot(data = pbmc_data, aes(x = cell_type, fill = cell_type)) +  # initialise the plot
+         geom_bar(show.legend = F) +  # plot a bar chart, turn off legend
+         scale_fill_manual(values = cell_colours) + # change colours
+         scale_x_discrete(limits = c("Megakaryocytes", "Dendritic cells", "NK cells", "FCGR3A+ Monocytes", "CD8 T cells", "B cells", "CD14+ Monocytes", "CD4 T cells")) + # reorder items on x axis
+         scale_y_continuous(expand = c(0, 0), # removes white space between bars and axes
+                            limits = c(0, 1200), # set y axis limits
+                            labels = scales::comma) + # format numbers on y axis
+         labs(x = NULL, y = 'Number of cells') + # set axis labels
+         coord_flip() + # flip barchart to horizontal
+         theme_linedraw(base_size = 22) + # change theme and increase all font sizes
+         theme(plot.margin = margin(10, 25, 10, 10)) # adjust the margin of the plot to prevent text getting cut off
+```
+
+
+<br>
+
+-----
+
+#### 2. Scatterplot
+
+Your next task is to create a scatterplot using the `UMAP1` and `UMAP2` columns as x and y coordinates respectively. Colour the points by cell type. Your finished plot should look something like this:
+
+![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/fig2.png?raw=true)
+
+<br>
+
+**Some hints:**
+
+- Aesthetics - The x and y axis should represent UMAP1 and UMAP2. Use colour to represent cell type.
+
+- Geometries - Use `geom_point()`.
+
+- Scales - Use `scale_colour_manual()` to change from the default colours to the vector of `cell_colours` I provided for you above.
+
+- Theme - Use `theme_classic()`.
+
+<br>
+
+```{r, scatter_1, fig.width=12, fig.height=8, class.source='solution'}
+ ggplot(data = pbmc_data, aes(x = UMAP1, y = UMAP2, colour = cell_type)) + # initialise plot
+         geom_point() + # draw scatterplot
+         scale_colour_manual(values = cell_colours, name = NULL) + # change colours and remove name of legend
+         guides(colour = guide_legend(override.aes = list(size = 6))) + # increase size of legend symbols
+         theme_classic(base_size = 22) + # change theme and increase all font sizes
+         theme(legend.key.height = unit(3,"line"), # spread out legend items
+               axis.text = element_text(colour = 'black')) # change colour of all axis text 
+```
+
+<br>
+
+Recreate the scatterplot but this time map colour to the expression of CST3. Your finished plot should look something like this:
+
+![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/fig3.png?raw=true)
+
+<br>
+
+All hints from above remain valid except now colour is representing a continuous variable instead of a categorical variable so you should use `scale_colour_gradientn()` to change from the default colours to the vector of `gradient_colours` that I've provided for you. 
+
+<br>
+
+```{r, scatter_2, fig.width=12, fig.height=8, class.source='solution'}
+gradient_colours <- c("#0D0887FF", "#CC4678FF", "#F0F921FF") # colours to use for scale_colour_gradientn()
+
+ggplot(data = pbmc_data, aes(x = UMAP1, y = UMAP2, colour = CST3)) + # initialise
+         geom_point() + # draw scatter plot
+         scale_colour_gradientn(colours = gradient_colours, name = NULL) + # change colours and remove name of legend
+         labs(title = 'CST3') + # add a plot title
+         theme_classic(base_size = 22) + # change theme and increase all font sizes
+         theme(plot.title = element_text(hjust = 0.5), # center align plot title
+               axis.text = element_text(colour = 'black'), # change colour of all axis text
+               legend.key.height = unit(3, 'line')) # increase size of legend
+```
+
+<br>
+
+What do you notice about CST3 expression? If you try recreating the plot for CD3E and MS4A1 expression, you'll notice that these genes are more highly expressed in some clusters than in others.
+
+<br>
+
+----
+
+#### 3. Violin plot
+
+The next task is to visualise the distribution of CST3 expression in different cell types using a violin plot. I like to combine violin plots with a stripchart to show the individual datapoints as it can be helpful when comparing groups of unequal sizes to get an idea of how many datapoints are in each group. Your finished plot should look something like this:
+
+![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/fig4.png?raw=true)
+
+<br>
+
+**Some hints:**
+
+- Aesthetics - The x axis should represent cell type, the y axis should represent CST3 expression and the fill of the violins should represent cell type.
+
+- Geometries - Use `geom_violin()` to create the violin plot and `geom_jitter()` to overlay the stripchart. Adjust the size and alpha of the `geom_jitter()` points to make them smaller and more transparent.
+ 
+- Scales - Use `scale_fill_manual()` to change the fill colours to the vector of `cell_colours` I provided above. 
+
+- Theme - Use `theme_linedraw()` instead of the default theme. Use `theme()` to rotate the x axis labels by 90 degrees.
+
+<br>
+
+```{r, violin, fig.width=12, fig.height=8, class.source='solution'}
+ggplot(data = pbmc_data, aes(x = cell_type, y = CST3, fill = cell_type)) + # initialise
+         geom_violin(show.legend = F) + # draw violin plot and turn off legend
+         geom_jitter(alpha = 0.3, size = 0.25, show.legend = F) + # draw stripchart, decrease size of points and turn off legend
+         scale_fill_manual(values = cell_colours) + # change fill colours
+         labs(title = 'CST3', x = NULL, y = NULL) + # change plot title and axis labels 
+         theme_linedraw(base_size = 22) + # change theme and increase font sizes
+         theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), # rotate and align x axis text
+               plot.title = element_text(hjust = 0.5)) # center align plot title
+```
+
+<br>
+
+*Which cell types have the highest expression of CST3?*
+
+<br>
+
+----
+
+#### 4. Heatmap
+
+The final task is to create a heatmap that shows the average expression value of each gene in each cell type. This will require some data wrangling. Run the code block below to get a new dataframe with 3 columns - cell_type, gene and avg_exp_value.  
+
+<br>
+
+```{r, get_avg_exp}
+cell_types <- as.character(unique(pbmc_data$cell_type)) # create a vector of cell types
+genes <- colnames(pbmc_data)[2:13] # create a vector of genes
+avg_values <- c() # create an empty vector to store avg. expression values
+
+for(i in cell_types){ # loop through cell types
+  sub <- subset(pbmc_data, pbmc_data$cell_type == i) # take a subset of the main dataframe containing only cell type i
+  avg_values <- c(avg_values, colMeans(sub[2:13])) # get the average of each of the gene columns in the subsetted dataframe and append them to the avg_values vector
+}
+
+avg_exp_df <- data.frame(cell_type = rep(cell_types, each = 12), # create a new dataframe to store the avg expression data
+                         gene = rep(genes, 8),
+                         avg_exp = avg_values)
+
+# Note: If the code above scares you, there is a simpler way to do it using the dplyr and tidyr R packages. If you have these packages installed you can uncomment the following code and run it to get the same dataframe that's being produced above.
+#
+#library(dplyr)
+#library(tidyr)
+#avg_exp_df <- pbmc_data %>% 
+#                select(-c(UMAP1, UMAP2)) %>%
+#                group_by(cell_type) %>% 
+#                summarise_all(mean) %>%
+#                pivot_longer(cols = 2:13, names_to = 'gene', values_to = 'avg_exp')
+```
+
+<br>
+
+Use the `head()` function to take a look at the `avg_exp_df` dataframe and make sure you understand what's in it.
+
+```{r}
+head(avg_exp_df)
+```
+
+Now we have the data in the correct format to create a heatmap that shows the average expression of each gene in each cell type. Your finished graph should look something like this:
+
+![](https://github.com/Genomics-CRT/Data-Science-For-Life-Science/blob/master/Introduction_to_R/part_3/imgs/fig5.png?raw=true)
+
+<br>
+
+**Some hints:**
+
+- Aesthetics - The x axis should represent gene, the y axis should represent cell type and the fill of the squares should represent the average expression value.
+
+- Geometries - Use `geom_tile()`.
+
+- Scales - Average expression is another continuous variable so use `scale_fill_gradientn()` to change from the default fill colours to the vector of  `gradient_colours` I provided above.
+
+- Theme - Use `theme()` to rotate the x axis labels by 90 degrees and change the fill of the panel background from the default grey to white.
+
+<br>
+
+```{r, heatmap, fig.width=12, fig.height=8, class.source='solution'}
+ggplot(avg_exp_df, aes(x = gene, y = cell_type, fill = avg_exp)) + # initialise
+         geom_tile(colour = 'gray70') + # draw heatmap, set colour of tile outlines
+         scale_fill_gradientn(colours = gradient_colours) + # change fill colours
+         labs(x = NULL, y = NULL, fill = 'Avg. \nExpression') + # change axis labels and legend title
+         theme_gray(base_size = 22) + # set theme and increase font sizes
+         theme(panel.background = element_rect(fill = 'white'), # change colour of background panel
+               axis.text = element_text(colour = 'black'), # change colour of all axis text
+               axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), # rotate and align x axis text
+               legend.key.height = unit(3, 'line')) # increase size of legend 
+```
+
+<br>
+
+----
+
+#### Bonus Solution!!
+
+Sometimes it can be useful to combine multiple plots into one figure. There are a few ways of doing this in R. The solution below uses the `cowplot` package to layout all of our beautiful plots in one grid. If you haven't got this package installed you can install it by running `install.packages('cowplot')`.
+
+```{r, message=FALSE, plot_grid, fig.width=20, fig.height=35, class.source='solution'}
+library(cowplot) # load cowplot library
+
+# save barchart as fig1
+fig1 <- ggplot(data = pbmc_data, aes(x = cell_type, fill = cell_type)) +  
+          geom_bar(show.legend = F) +  
+          scale_fill_manual(values = cell_colours) +
+          scale_x_discrete(limits = c("Megakaryocytes", "Dendritic cells", "NK cells", "FCGR3A+ Monocytes", "CD8 T cells", "B cells", "CD14+ Monocytes", "CD4 T cells")) +
+          scale_y_continuous(expand = c(0, 0), 
+                            limits = c(0, 1200), 
+                            labels = scales::comma) + 
+          labs(x = NULL, y = 'Number of cells') + 
+          coord_flip() + 
+          theme_linedraw(base_size = 22) +
+          theme(plot.margin = margin(10, 25, 10, 10))
+
+# save celltype scatterplot as fig2
+fig2 <- ggplot(data = pbmc_data, aes(x = UMAP1, y = UMAP2, colour = cell_type)) + 
+          geom_point() + 
+          scale_colour_manual(values = cell_colours, name = NULL) + 
+          guides(colour = guide_legend(override.aes = list(size = 6))) + 
+          theme_classic(base_size = 22) + 
+          theme(legend.key.height = unit(3,"line"),
+                axis.text = element_text(colour = 'black')) 
+
+# save gene expression scatterplots as fig3.1, fig3.2, fig3.3
+fig3.1 <- ggplot(data = pbmc_data, aes(x = UMAP1, y = UMAP2, colour = CST3)) + 
+            geom_point(show.legend = F) + 
+            scale_colour_gradientn(colours = gradient_colours, name = NULL, limits = c(0, 5.5)) + 
+            labs(title = 'CST3') +
+            theme_classic(base_size = 22) + 
+            theme(plot.title = element_text(hjust = 0.5),
+                  axis.text = element_text(colour = 'black'), 
+                  legend.key.height = unit(3, 'line')) 
+
+fig3.2 <- ggplot(data = pbmc_data, aes(x = UMAP1, y = UMAP2, colour = CD3E)) + 
+            geom_point(show.legend = F) + 
+            scale_colour_gradientn(colours = gradient_colours, name = NULL, limits = c(0, 5.5)) + 
+            labs(title = 'CD3E') +
+            theme_classic(base_size = 22) + 
+            theme(plot.title = element_text(hjust = 0.5),
+                  axis.text = element_text(colour = 'black'), 
+                  legend.key.height = unit(3, 'line')) 
+
+fig3.3 <- ggplot(data = pbmc_data, aes(x = UMAP1, y = UMAP2, colour = MS4A1)) + 
+            geom_point() + 
+            scale_colour_gradientn(colours = gradient_colours, name = NULL, limits = c(0, 5.5)) + 
+            labs(title = 'MS4A1') +
+            theme_classic(base_size = 22) + 
+            theme(plot.title = element_text(hjust = 0.5),
+                  axis.text = element_text(colour = 'black'), 
+                  legend.key.height = unit(3, 'line')) 
+
+# save gene expression violin plots as fig4.1, fig4.2, fig4.3
+fig4.1 <- ggplot(data = pbmc_data, aes(x = cell_type, y = CST3, fill = cell_type)) + 
+            geom_violin(show.legend = F) + 
+            geom_jitter(alpha = 0.3, size = 0.25, show.legend = F) + 
+            scale_fill_manual(values = cell_colours) +
+            labs(title = 'CST3', x = NULL, y = NULL) + 
+            theme_linedraw(base_size = 22) + 
+            theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), 
+                  plot.title = element_text(hjust = 0.5)) 
+
+fig4.2 <- ggplot(data = pbmc_data, aes(x = cell_type, y = CD3E, fill = cell_type)) + 
+            geom_violin(show.legend = F) + 
+            geom_jitter(alpha = 0.3, size = 0.25, show.legend = F) + 
+            scale_fill_manual(values = cell_colours) +
+            labs(title = 'CD3E', x = NULL, y = NULL) + 
+            theme_linedraw(base_size = 22) + 
+            theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), 
+                  plot.title = element_text(hjust = 0.5)) 
+
+fig4.3 <- ggplot(data = pbmc_data, aes(x = cell_type, y = MS4A1, fill = cell_type)) +
+            geom_violin(show.legend = F) + 
+            geom_jitter(alpha = 0.3, size = 0.25, show.legend = F) + 
+            scale_fill_manual(values = cell_colours) +
+            labs(title = 'MS4A1', x = NULL, y = NULL) + 
+            theme_linedraw(base_size = 22) + 
+            theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), 
+                  plot.title = element_text(hjust = 0.5)) 
+
+# save heatmap as fig5
+fig5 <- ggplot(avg_exp_df, aes(x = gene, y = cell_type, fill = avg_exp)) + 
+          geom_tile(colour = 'gray70') + 
+          scale_fill_gradientn(colours = gradient_colours) + 
+          labs(x = NULL, y = NULL, fill = 'Avg. \nExpression') + 
+          theme_gray(base_size = 22) + 
+          theme(panel.background = element_rect(fill = 'white'), 
+                axis.text = element_text(colour = 'black'), 
+                axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), 
+                legend.key.height = unit(3, 'line'))
+
+# set up grid rows
+row1 <- plot_grid(fig1, fig2, labels = c('A', 'B'), label_size = 20)
+row2 <- plot_grid(fig3.1, fig3.2, fig3.3, nrow = 1, rel_widths = c(0.8, 0.8, 1), labels = 'C', label_size = 20)
+row3 <- plot_grid(fig4.1, fig4.2, fig4.3, nrow = 1, labels = 'D', label_size = 20)
+row4 <- plot_grid(NULL, fig5, NULL, nrow = 1, rel_widths = c(0.2, 1, 0.2), labels = 'E', label_x = 0.9, label_size = 20)
+
+# combine rows into plot grid
+grid <- plot_grid(row1, row2, row3, row4, nrow = 4, scale = 0.9, rel_heights = c(0.8, 0.7, 1, 0.8))
+
+# set up title
+title <- ggdraw() + draw_label('A visual exploration of 2,638 PBMCs using ggplot2', hjust = 0.5, size = 25)
+
+# combine title and plot grid
+plot_grid(title, grid, ncol = 1, rel_heights = c(0.05, 1))
+```
+
+Run the following code block to save your figure.
+
+```{r}
+# save figure
+ggsave('pbmc_plots.png', width = 20, height = 24)
+```
+
