@@ -1,0 +1,169 @@
+# Part 1
+
+1. Generate 100 observations from normal distribution with mean=5, sd=2.
+
+2. Use this vector to calculate mean, median, sd, variance. 
+
+3. Use this vector to plot Cumulative Distribution Function. You can use either basic R or ggplot. 
+
+4. Use this vector to plot density function. You can use either basic R or ggplot. 
+
+5. Find the 42nd, 77th and 99th percentiles of this vector. 
+
+6. Plot boxplot using this vector. You can use either basic R or ggplot. 
+
+7. Find interquartile range using this vector. 
+
+8. Compute 20th percentile, upper and lower quartile of Poisson distribution with <img src="https://render.githubusercontent.com/render/math?math=\lambda"> = 14. 
+
+9. There are 20 multiple choice questions in a test. Each question has 5 possible answers and only one of them is correct. 
+
+* Find the probability of having exactly 1 correct answer if a student attempts to answer every question at random. 
+* Find the probability of having 5 or less correct answers if a student attempts to answer every question at random.
+
+10. (this example does not reflect reality!) There are 5 transcription-factor binding sites (TF BSs) on average in a bin of length 2000nt.  Find the probability of having more than 15 TF BSs in a particular bin of the same length. 
+
+11. Generate 10 observations from t-distribution. 
+
+12. Find 1st, 4th and 99th percentile of uniform distribution with parameters: min=1, max=6. 
+
+13. Find 68%, 75% and 95% confidence intervals for a population mean, if you have this sample: 
+
+```{r}
+sample <- c(-2.14, 7.21, -0.98, 2.14, 2.66, -2.48, -4.64, 3.08, -2.82, 5.84, 
+            3.17, 8.71, 6.5, 4.97, 6.08, 13.2, 10.29, 3.78, 7.2, 5.6, 3.34, 
+            7.67, 10.88, 5.01, 14.37, 7.64, 11.42, 10.64, 9.02, 7.9, 6.05, 11.25)
+```
+
+
+
+# Part 2
+
+1. Compare 2 samples means using appropriate test. 
+
+   Suppose, we have got gene expression data for some gene in a samples under stress condition (e.g. starvation) and control samples (untreated). 
+   We want to identify whether expression of the gene changes during stress (in both directions, it could be up-regulated or down-regulated).
+
+```R
+df <- data.frame(sample = c(4.63, 3.72, 3.81, 5.22, 5.19, 4.86, 5.49, 2.46, 4.43, 3.87, 4.88, 3.2, 3.64, 2.79, 4.97, 5.77, 3.08, 4.04, 4.79, 5.74),
+                control = c(2.96, 3.07, 1.13, 3.76, 1.33, 3.06, 2.19, 1.32, 2.23, 0, 0.76, 2.52, 2.18, 1.9, 3.26, 1.26, 3.22, 1.5, 1.23, 2.13))
+```
+* Plot the data, spot the difference between 2 groups if any
+
+* What kind of test should be applied here, paired or unpaired? 
+
+* What are hypotheses, one-sided or two-sided?
+
+* Check whether data distributed normally in order to choose between parametric and non-parametric test.
+
+* Test the equality of variances if needed. 
+
+
+
+
+2. Compare 2 samples means using appropriate test. 
+
+   Suppose that we want to test whether gene BCL-2 plays an important role with respect to discriminating DLBCL ABC from DLBCL GCB patients. 
+   We are interested whether an expression of BCL-2 in patients with GCF type is higher than in patients with ABC. 
+
+   In dataframe there is BCL-2 expression for patients with DLBCL ABC and DLBCL GCB.
+   (this example as any others is artifical)
+
+```{r}
+df <- data.frame(ABC = c(1.736, 3.408, 2.54, 1.501, 1.405, 2.057, 2.924, 3.147, 2.309, 2.774, 
+                         1.929, 1.695, 1.467, 1.61, 4.986, 1.684, 0.926, 1.163, 2.8, 1.125, 
+                         0.8, 0.56, 1.408, 1.704, 1.724),
+                 GCB = c(1.605, 1.662, 2.468, 2.231, 2.163, 1.673, 2.536, 2.41, 1.205, 4.508, 
+                         1.475, 1.617, 1.906, 2.55, 1.55, 3.756, 6.132, 4.455, 4.448, 1.688, 
+                         2.091, 2.312, 5.972, 4.213, 3.11))
+```
+
+
+* Plot it 
+
+* Are data paired or not?
+
+* What are hypotheses, one-sided or two-sided?
+
+* Check normality of the data. 
+
+* Test the equality of variances if needed. 
+
+
+
+3. Suppose you performed genome wide association study (GWAS) for n=20 SNPs. 
+   You have got n p-values. Apply any multiple adjustment correction. How many significant p-values do you still observe? 
+
+```{r}
+p_values <- c(0.6082, 0.0266, 0.0174, 0.5522, 0.9615, 0.3277, 0.7874, 0.2051, 0.4608, 0.0472, 0.0164, 0.202, 0.8077, 0.1624, 0.9985, 0.0459, 0.1305, 0.2581, 0.9922, 0.2984)
+```
+
+
+4. Suppose you want to check whether there is a correlation between 2 gene expressions. You have 30 samples.  Choose an appropriate test for that. 
+
+```{r}
+two_genes <- data.frame(gene1 = c(0.089, 0.239, 0.531, 0.054, 0.625, 0.488, 0.522, 0.37, 0.347, 
+                                  0.393, 0.513, 0.794, 0.354, 0.085, 0.144, 0.493, 0.021, 0.596,
+                                  0.417, 0.504, 0.597, 0.229, 0.137, 0.843, 0.37, 0.421, 0.509, 
+                                  0.626, 0.325, 0.115),
+                        gene2 = c(5.411, 4.206, 3.744, 4.892, 11.021, 4.03, 7.741, 3.588, 9.762, 
+                                  4.765, 7.147, 12.538, 10.066, 10.245, 7.657, 6.804, 8.888, 12.123, 
+                                  4.583, 3.123, 4.062, 8.963, 6.108, 6.119, 8.919, 6.634, 10.857, 6.934, 
+                                  6.564, 5.296))
+```
+
+* Plot it first to be sure that it looks like there is a linear dependency in the data 
+
+* Check normality of the data 
+
+* Use an appropriate test 
+
+
+
+# Part 3
+
+We are going to predict the phenotype feature based on expression of several genes. 
+Build linear regression models and compare them.  
+
+```{r}
+df <- read.table('datasets/linreg_task.txt', sep='\t')
+
+head(df, 3)
+# [1]     feature    geneA     geneB     geneC   geneD
+# [1]1	    5.752	  16.643	   1.108	  34.244	28.418
+# [1]2	   15.766	  72.700	  19.274	  57.923	74.064
+# [1]3	    8.180	  24.745	  -9.423	  32.620	31.759
+```
+
+* Plot scatter plots and correlation plot
+
+* Build a simple model with one most promising predictor
+
+* Get a summary of the model and interpret it 
+
+* Incorporate into the model all genes at once
+
+* Play with different sets of predictors
+
+* Compare models 
+
+
+<b> Tricky question 1 </b>
+
+​	As you might recall, T-statistic in 2-sample T-test follows T-distribution under null hypothesis.  But how p-values are distributed under the null hypothesis? 
+
+​	Check it using R. Here some way to achieve this:
+
+* use function <i>replicate</i> to repeat multiple t-tests - 1000 t-tests for 2 samples distributed normally with the same parameters
+* plot density of p-value distribution, guess by the form which distribution could it be (you can use base R functions here)
+* check if the probabilities follow a particular distribution with a QQ plot (qqplot)
+
+
+<b> Tricky question 2 </b>
+
+​	How big should be samples to be able to distinguish the very subtle difference in means? 
+
+​	If we have only 10 observations, we obviously can't expect great performance. Let's start with 30 observations following normal distribution with mean1 = 0 and mean2 = 0.1.
+
+​	Calculate p-values of 2-sample T-test for different sample sizes and plot it. Identify the order of sample size you need to reject H0 if the difference between sample means is 0.1.
+
