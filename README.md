@@ -82,6 +82,7 @@ This tutorial covers creating plots in Python, using the popular `matplotlib` li
 
 #### Math and Statistics (Python)
 This tutorial is split into 3 parts and covers:
+
 **1)** Descriptive statistics for single variable and multivariable datasets including measures of central tendency, variability and quantiles, along with distributions, the Central Limit Theorem and confidence interval for the mean.
 
 **2)** Hypothesis testing in the form of 2-samples comparison (the t-test, non-parametric test) and correlation tests (parametric and non-parametric)
