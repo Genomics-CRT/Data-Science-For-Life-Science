@@ -99,6 +99,10 @@ This tutorial is split into 3 parts and covers:
 #### Zoom meeting
 `Thursday 14th 2-4pm`
 
+`2-3pm - Python part`
+
+`3-4pm - R part`
+
 ## Week 6 (18/05/2020)
 
 #### Machine Learning (R) 
