@@ -809,9 +809,7 @@ text(x=1.25, y=Q3, labels='Q3', cex=1.5)
 text(x=1.25, y=Q1-1.5*IQR, labels='Q1-1.5*IQR', cex=1.5)
 text(x=1.25, y=Q3+1.5*IQR, labels='Q3+1.5*IQR', cex=1.5)
 ```
-
-<img src="https://github.com/triasteran/Data-Science-For-Life-Science/blob/master/Statistics_and_Math_in_R/pictures/boxplot.png" alt="drawing" width="500"/>
-
+<img src="https://github.com/triasteran/Data-Science-For-Life-Science/blob/master/Statistics_and_Math_in_R/pictures/boxplot.png" alt="drawing" width="400"/>
 ```{r}
 #show boxplot points in density plot
 IQR <- IQR(v$v)
