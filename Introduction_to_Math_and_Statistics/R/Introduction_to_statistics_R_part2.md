@@ -99,7 +99,7 @@ Two-sided hypothesis would be:
 
   
 
-  Besides, T-test could be paired on unpaired.
+​	Besides, T-test could be paired on unpaired.
 
 * Paired t-test compares study subjects at 2 different times (paired observations of the same subject)
 
@@ -145,11 +145,11 @@ attr(,"conf.level")
 
 ​	Let's interpret the output. Generally, you look at only p-value, and draw conclusions like this: "p-value < 0.05, so we have evidence to reject H0 at this level, and it means there is a difference between groups caused not only by chance". But what about t = 4.7647, df = 98 and 95 percent confidence interval? What can these metrics tell us and why are they important too? 
 
-​	When you perform a t-test, you calculate a specific measure called T-statistic. It basically measures the size of the difference between sample mean of group 1 and sample mean of group 2 relative to the variation in the sample data. In other words, T-statistic is simply the calculated difference represented in units of standard error. Just look at the formula (for simplification, denominator is just SE, without details, but it represents standard error of 2 samples):
+​	When you perform a t-test, you calculate a specific measure called T-statistic. It basically measures the size of the difference between sample mean of group 1 and sample mean of group 2 relative to the variation in the sample data. In other words, T-statistic is simply the calculated difference represented in units of standard error. Just look at the formula (for simplification, denominator is just SE, without details, but it represents standard error of 2 sample means):
 
 ![equation](http://latex.codecogs.com/gif.latex?T_Statistic%3D%5Cfrac%7B(M1-M2)-0%7D%7BSE%7D)   
 
-where M1 - mean of group 1 and M2 - mean of group 2 (in our example, M1 for treated and M2 for control)
+where M1 - mean of group 1 and M2 - mean of group 2 (in our example, M1 for treated and M2 for control), 0 - is a mean difference under H0.
 
 ​	As you can see, the greater T, the greater the difference between group means, and the greater evidence against the null hypothesis. The closer T is to 0, the more likely there isn't a significant difference (M1 - M2 = 0 => T = 0, no difference).
 
