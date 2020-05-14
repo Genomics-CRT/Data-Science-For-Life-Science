@@ -1,5 +1,11 @@
 # Introduction to Statistics in R Worksheet. Part 2
 
+```{r}
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+```
+
 ​	Linear regression analysis is a machine learning method which is used to predict a continuous outcome variable (y) based on the value of one or multiple predictor variables (x). It assumes a linear relationship between the outcome and the predictor variables. Basically, it builds a mathematical equation like y=bx1 + bx2 + ... + a, which then can be used to predict the outcome variable (y) using new values of the predictor variables x. 
 
 * a - intercept
@@ -209,18 +215,19 @@ summary(model2)
 [1] F-statistic: 2.014 on 4 and 48 DF,  p-value: 0.1075
 ```
 
-How to compare 2 models?  We can use ANOVA for that.  It tests whether one model is significantly better at capturing the data than the other model. If the resulting p-value is sufficiently low (usually less than 0.05), we conclude that the first model is significantly better than the second one, and thus favor the first model. 
+How to compare 2 models? 
+We can use ANOVA for that.  It tests whether one model is significantly better at capturing the data than the other model. If the resulting p-value is sufficiently low (usually less than 0.05), we conclude that the 2nd model is significantly better than the 1st one, and thus favor the 2nd model (so, added parameters help to make the model perform better.)
 
 As we can see here, Pr(>F) = 0.1084, so two models are not different significantly.
 
 ```{r}
-anova(model2, simple_model)
+anova(simple_model, model2)
 
-[1] Analysis of Variance Table
+# [1] Analysis of Variance Table
 
-[1] Model 1: death_rate ~ doctors + hospitals + income + pop_density
-[1] Model 2: death_rate ~ income
-[1]   Res.Df    RSS Df Sum of Sq      F Pr(>F)
-[1] 1     48 123.07                           
-[1] 2     51 139.48 -3   -16.403 2.1324 0.1084
+# [1] Model 1: death_rate ~ income
+# [1] Model 2: death_rate ~ doctors + hospitals + income + pop_density
+# [1]   Res.Df    RSS Df Sum of Sq      F Pr(>F)
+# [1] 1     51 139.48                           
+# [1] 2     48 123.07  3    16.403 2.1324 0.1084
 ```
