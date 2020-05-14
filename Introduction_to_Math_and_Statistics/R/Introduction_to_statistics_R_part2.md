@@ -77,7 +77,7 @@ Let's formulate hypotheses (it's one-sided type):
 * H0: mean1 == mean2 - there is no difference between means 
 * H1: mean1 > mean2 - difference in one direction 
 
-where <i>mean1</i> is the mean of control and <i>mean2</i> is the mean of treated group. So, the average number of dead cells in treated is higher than in control cultures, which means that treatment may cause cell death. 
+where <i>mean2</i> is the mean of control and <i>mean1</i> is the mean of treated group. So, the average number of dead cells in treated is higher than in control cultures, which means that treatment may cause cell death. 
 
 Another One-sided type would be:
 
