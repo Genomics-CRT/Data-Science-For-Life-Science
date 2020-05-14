@@ -459,7 +459,7 @@ where <i> (a+b)/2 </i> is mean and variance is <i> 1/12*(b-a)^2 </i>.
 
 ​	Examples of Uniform distributions:
 
-* If you choose a card in a deck of unique cards (e.g. 36 cards in total and they all are equally likely to choose, 1/36)
+* If you choose a card in a deck of unique cards (e.g. 36 cards in total and they all are equally likely to choose, 1/36, but this example is for descrete uniform distribution)
 * Perfect random number generators (outcomes are equally likely)
 * Probability of guessing exact time at any moment (outcomes should be equally likely, so you probably have to sit in a dark room for a while to make sure that you have no idea whether it's morning or evening)
 
