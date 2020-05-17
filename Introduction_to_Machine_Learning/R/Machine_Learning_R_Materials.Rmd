@@ -1,0 +1,1155 @@
+---
+title: "Week 6 Machine Learning in R"
+author: "Barry Digby"
+output:
+  html_document:
+    toc: true
+    toc_float: false
+    code_folding: hide
+    theme: flatly
+    highlight: zenburn
+---
+
+***
+
+If something is not clear in the document, google it. Stackoverflow, sthda, towards data science, biostars are your friend.  If you still cant find the answer, email me at barry.digby@nuigalway.ie and I will google it for you. 
+
+General troubleshooting issues regarding code not working etc should be posted to the github issues section. 
+
+The most recent update of this html document occurred: `r date()`.
+
+*** 
+
+# Introduction
+Welcome to week 6 `Machine Learning in R` in the CRT outreach workshop. The goal of this document is to give you a whistle-stop tour of what I have been exposed to in the Biomedical Genomics MSc, and what I think might be useful for you going forward. The format of this document hides code blocks automatically. Please select "code" to display code blocks in each section. As always, run the code yourself in R Studio to inspect the data and manipulations performed on it. 
+
+***
+
+# Required Libraries
+Please install the libraries below to run the document and participate in the worksheet. Install libraries by using `install.packages("library")`. If the library is not available, it is most likely available via Bioconductor `BiocManager::install("library")`. If both methods are unsuccessful, google the package name. For some packages you may have to install them from github via `devtools()`. I have made an effort to highlight such packages to save you time however I cannot remember the source of every package...  
+```{R, message=F, echo=T, results="hide"}
+library(knitr)
+library(gplots)
+library(ggplot2)
+library(RColorBrewer)
+library(NbClust)
+library(factoextra)
+library(PCAtools)
+library(caret)
+library(pROC)
+#install.packages("devtools")
+library(devtools)
+#devools::install_github("jokergoo/ComplexHeatmap")
+library(ComplexHeatmap)
+library(circlize)
+#devtools::install_github("compgenomr/compGenomRData")
+library(compGenomRData)
+#BiocManager::install("DALEX")
+library(DALEX)
+library(kernlab)
+library(glmnet)
+library(rpart) ## for decision tree demonstration, not essential
+library(rattle) ## for decision tree demo, not essential
+```
+
+***
+
+# Unsupervised Machine Learning
+Used interchangeably with **Exploratory Data Analysis**, unsupervised machine learning has many uses in genomic data. Typically, we are interested in how the variables (genes) present in our dataset relate to eachother and at a higher level, how the samples defined by those variables are related. One of the first steps in data analysis is to perform **clustering**, **scaling** and **dimension reduction** to inspect the dataset and to generate hypotheses about the data. 
+
+ ***
+ 
+## Clustering based on Similarity
+We typically want to inspect how similar (or dissimilar) our samples are to each other. Take a matched tumor-normal RNA-Seq experiment as an example. By performing clustering on the dataset we would hope that the tumor samples cluster together independently of the control samples. Furthermore, we would also hope that the replicates within each condition cluster tightly together -- that is to say that intra cluster variance is lower than inter cluster variance. If these are both true of the dataset, then we can confirm that the experimental design, tissue extraction, RNA isolation and sequencing was performed to a high standard. 
+
+ ***
+ 
+## Distance Metrics{.tabset}
+Before you can perform clustering, you need to define a distance metric. Lets use a small toy dataset first to illustrate different distance metrics before moving onto a full dataset:
+```{r, message=FALSE}
+df=data.frame(
+    IRX4=c(11,13,2,1),
+    OCT4=c(10,13,4,3 ),
+    PAX6=c(1 ,3 ,10,9),
+    row.names=c("patient1","patient2","patient3","patient4")
+  )
+knitr::kable(
+  df,
+  caption = 'Gene expressions from patients', 
+  booktabs = FALSE
+)
+```
+
+By inspecting the table, you might have noticed expression patterns unique to patients, and how they might group together accordingly. This becomes more obvious when the expression levels are plotted using a barplot: 
+
+```{r, out.width='100%'}
+library(ggplot2)
+df2=tidyr::gather(cbind(patient=rownames(df),df),key="gene",value="expression",IRX4,PAX6,OCT4)
+ggplot(df2, aes(gene,expression, fill = patient)) + geom_bar(stat = "identity", position = "dodge",width=0.3) +facet_wrap(~ patient,nrow=4)+ theme_bw()
+```
+
+We can see that *IRX4* and *OCT4* expression is higher in patients 1 and 2, whilst *PAX6* expression is higher in patients 3 and 4. It is obvious how patients will cluster together based on gene expression profiles, but how can we represent this as a distance metric and apply it to a larger dataset?
+
+### Manhattan Distance
+A simple metric for distance between gene expression vectors between a given patient pair is the sum of absolute difference between gene expression values. This can be formulated as follows: $d_{AB}={\sum _{i=1}^{n}|e_{Ai}-e_{Bi}|}$, where $d_{AB}$ is the distance between patient A and B, and $e_{Ai}$ and $e_{Bi}$ expression value of the $i$th gene for patient A and B. This is also known as the **Manhattan Distance**. Lets try computing it by hand first:
+```{R, echo = T, message=F}
+manhattan_dist <- function(eAi, eBi){
+     distance <- abs(eAi-eBi)
+     distance <- sum(distance)
+     return(distance)
+}
+
+# distance between patient 1 and patient 2
+paste0("Manhattan distance Patient 1, Patient 2: ", manhattan_dist(df[1,], df[2,]))
+
+# distance between patient 1 and patient 3
+paste0("Manhattan Distance Patient 1, Patient 3: ", manhattan_dist(df[1,], df[3,]))
+```
+
+R has a manhattan distance function, which can be used by calling: `dist(df, method = "manhattan")`. This will compute the distance between every row. This distinction is important. Typically you will recieve a counts matrix as sample columns and gene rownames. If you want to compute manhattan **sample to sample** distances you will have to transpose the matrix by calling `t(df)`. Our dataframe already has samples as rows, thus no transformation is required. 
+
+```{R, echo =T, message=F}
+# First lets check if our manual manhattan distance coding agrees with R:
+print(dist(df, method = "manhattan"))
+```
+
+### Euclidean Distance
+**Euclidean distance** uses the sum of squared distances and takes the square root of the resulting value and thus can be formulated as: $d_{AB}={{\sqrt {\sum _{i=1}^{n}(e_{Ai}-e_{Bi})^{2}}}}$. This is usually the default distance metric for clustering algorithms used by functions (remember to type F1 to read the manual pages of a function). Values that are very different get higher contribution to the distance due to the squaring operation. Lets code it manually:
+```{R, echo = T, message=F}
+euclidean_dist <- function(eAi, eBi){
+  distance <- (eAi-eBi)^2
+  distance <- sum(distance)
+  distance <- sqrt(distance)
+  return(distance)
+}
+
+# distance between patient 1 and patient 2
+paste0("Euclidean Distance patient 1, patient 2: ", euclidean_dist(df[1,], df[2,]))
+
+# distance between patient 1 and patient 3
+paste0("Euclidean Distance patient 1, patient 2: ", euclidean_dist(df[1,], df[3,]))
+```
+
+**Euclidean distance** can be called using `dist(df, method = "euclidean")`.
+```{R, message=F}
+# First lets check if our manual euclidean distance coding agrees with R:
+print(dist(df, method = "euclidean"))
+```
+
+### Correlation Distance
+The last metric we will introduce is the **"correlation distance"**. This is simply $d_{AB}=1-\rho$, where $\rho$ is the pearson correlation coefficient between two vectors, in our case those vectors are gene expression profiles of patients. Using the correlation distance will return small values for vectors that are similar, and higher values for vectors that are dissimilar. Lets code it by hand first:
+
+```{R, message=F}
+corr_dist <- function(eAi, eBi){
+  pearson <- cor(eAi, eBi)
+  distance <- 1 - pearson
+  return(distance)
+}
+
+# distance between patient 1 and patient 2
+paste0("Correlaion Distance patient 1, patient 2: ", corr_dist(t(df[1,]), t(df[2,])))
+
+# distance between patient 1 and patient 3
+paste0("Correlaion Distance patient 1, patient 3: ", corr_dist(t(df[1,]), t(df[3,])))
+```
+
+**Correlation distance** can be used by calling `as.dist(1-cor(t(df)))`. (We must transpose our toy dataframe for the pearson correlation calculation!):
+```{R, message=F}
+# First lets check if our manual correlation distance coding agrees with R:
+print(as.dist(1 - cor(t(df))))
+```
+
+ ***
+ 
+## Scaling your Data
+The traditional way of scaling variables is to subtract their mean, and divide by their standard deviation. This operation is also called “standardization” denoted by a Z score $Z = \frac{x - \mu}{\sigma}$. A nice visual representation of the transformation of scaling is given below (note the properties of the distribution: $\mu = 0$; $\sigma = 1$; retains the same shape as the original distribution from which it was derived):
+
+![alt](https://www.simplypsychology.org/standardizing.svg)
+
+The z-score is particularly important because it tells you not only something about the value itself, but also where the value lies in the distribution. Typically, for example, if the value is 3 standard deviations above the mean you know it's three times the average distance above the mean and represents one of the higher scores in the sample. The decision to apply scaling ultimately depends on our data and what you want to achieve. 
+
+Typically microarray or RNA-Seq data will be normalised with respect to the sequencing library depth and converted to the Log2 scale. It is useful to further scale and center the data for visualisations and machine learning algorithms. 
+
+First, lets manually code the scaling function to gain some intuition. The following code has been adopted from the **heatmap.2** scale function.
+```{R, message = F}
+# Credit : Kevin Blighe (https://www.biostars.org/p/179224/#333035)
+
+na.rm <- TRUE
+scaleRow <- function(x) {
+        rm <- rowMeans(x, na.rm = na.rm)
+        x <- sweep(x, 1, rm)
+        sx <- apply(x, 1, sd, na.rm = na.rm)
+        x <- sweep(x, 1, sx, "/")
+        return(round(x, 6))
+}
+scaleCol <- function(x) {
+        colMeans <- rm <- colMeans(x, na.rm = na.rm)
+        x <- sweep(x, 2, rm)
+        colSDs <- sx <- apply(x, 2, sd, na.rm = na.rm)
+        x <- sweep(x, 2, sx, "/")
+        return(round(x, 6))
+}
+
+print(scaleCol(df))
+
+print(scaleRow(df))
+```
+
+Alternatively, we could use base R `scale()` function instead. The scale function scales the columns of the matrix, this is important to note. Usually genes are on the rows of a matrix, so you will have to transpose the matrix before scaling genes. In our toy dataset we do not have to transpose the dataset.
+```{R, message=F}
+# scale by columns
+print(scale(df))
+
+# transpose and scale by rows
+print(scale(t(df)))
+```
+
+***
+
+## Hiearchical Clustering
+After defining a distance metric to assess intra cluster variable distances (genes), we are now interested in defining a clustering method to assess the inter cluster distance (samples). This can be done using hiearchical clustering. Using this algorithm you can see the relationship of individual data points and relationships of clusters. This is achieved successively joining small clusters to each other based on the intercluster distance. Eventually, you get a tree structure or a dendrogram that shows the relationship between the individual data points and clusters. The height of the dendrogram is the distance between clusters. 
+
+Lets use "complete" distance using the `hclust()` function on our toy dataset:
+```{r, message=F}
+d=dist(df)
+hc=hclust(d,method="complete")
+plot(hc)
+```
+
+As exected, patients 1 and 2 cluster away from patients 3 and 4. The *method* argument defines the criteria that directs how the sub-clusters are merged. During clustering starting with single-member clusters, the clusters are merged based on the distance between them. There are many different ways to define distance between clusters and based on which definition you use the hierarchical clustering results change. So the method argument controls that. There are a couple of values this argument can take, we list them and their description below:
+
+* **“complete”** stands for “Complete Linkage” and the distance between two clusters is defined as largest distance between any members of the two clusters.
+
+* **“single”** stands for “Single Linkage” and the distance between two clusters is defined as smallest distance between any members of the two clusters.
+
+* **“average”** stands for “Average Linkage” or more precisely UPGMA (Unweighted Pair Group Method with Arithmetic Mean) method. In this case, the distance between two clusters is defined as average distance between any members of the two clusters.
+
+* **“ward.D2”** and **“ward.D”** stands for different implementations of Ward’s minimum variance method. This method aims to find compact, spherical clusters by selecting clusters to merge based on the change in the cluster variances. The clusters are merged if the increase in the combined variance over the sum of the cluster specific variances is minimum compared to alternative merging operations.
+
+***
+
+## Heatmaps
+Now that we have covered distance metrics and a clustering technique, lets apply the methods to a large dataset and generate heatmaps. The dataset we are going to use is a gene expression profile of Leukemia subtypes: 
+
+* **AML**: Acute Myeloid Leukemia
+
+* **CML**: Chronic Myeloid Leukemia
+
+* **ALL**: Acute Lymphoblastic Leukemia
+
+* **CLL**: Chronic Lymphoblastic Leukemia
+
+* **NoL**: Non Leukemia 
+
+I will introduce you to the `heatmap.2` function and the `ComplexHeatmap` package. Both are highly configurable and generate publication quality plots. I recommend spending time understanding how to configure the plots. The documentation for each tool can be found at the respective links:
+
+* **heatmap.2**: https://rdrr.io/cran/gplots/man/heatmap.2.html 
+
+* **ComplexHeatmap**: https://jokergoo.github.io/ComplexHeatmap-reference/book/
+
+***
+
+### heatmap.2{.tabset}
+`Heatmap.2` allows the user to define both the distance function and the clustering function performed on the dataset. Please inspect the code below for the examples and pay attention to the calls used for `distfun` and `clustfun`. Note: we are calling `cor(mat)` here so we generate sample to sample distances, not sample - gene distances. This should be obvious given the output of the heatmaps, they appear as an adjacency matrix where the diagonal is the highest correlation -- naturally, a sample is 100% similar to itself. Run the code to generate the plots and view them in a separate window to view in a larger graphics window. This will facilitate every column label to be plotted. 
+
+#### Correlation distance
+```{R}
+# read in data
+system.file()
+expFile=system.file("extdata","leukemiaExpressionSubset.rds",package="compGenomRData")
+mat=readRDS(expFile)
+
+# set the leukemia type annotation for each sample
+annotation_col = data.frame(
+                    LeukemiaType =substr(colnames(mat),1,3))
+rownames(annotation_col)=colnames(mat)
+
+num_conditions <- nlevels(annotation_col$LeukemiaType)
+pal <- colorRampPalette(brewer.pal(num_conditions, "Set1"))(num_conditions)
+cond_colors <- pal[as.integer(annotation_col$LeukemiaType)]
+
+heatmap.2(cor(mat), scale="column", dendrogram = "column", labRow="", 
+          ColSideColors=cond_colors, trace='none', margins=c(7,8),
+          main='Correlation Distance', distfun=function(x) as.dist(1-cor(t(x))),
+          hclustfun = function(x) hclust(x, method = "complete"))
+
+          legend("left", 
+                 legend = unique(annotation_col$LeukemiaType),
+                 col = pal, 
+                 lty= 1,             
+                 lwd = 5,           
+                 cex=.7)
+```
+
+We can see that the correlation distance did the best job of clustering Leukemia types into their proper categories. One CML sample clustered together with the non leukemia samples. Try different configurations of both `distfun` and `clustfun` to see if you can achieve a better clustering result. It is important to let the data speak for itself, do not try to force results or discard samples based on preconceived ideas of the dataset!
+
+#### Euclidean Distance
+```{R}
+heatmap.2(cor(mat), scale="column", dendrogram = "column", labRow="", 
+          ColSideColors=cond_colors, trace='none', margins=c(7,8),
+          main='Euclidean Distance', distfun=function(x) dist(x, method = "euclidean"),
+          hclustfun = function(x) hclust(x, method = "complete"))
+
+          legend("left", 
+                 legend = unique(annotation_col$LeukemiaType),
+                 col = pal, 
+                 lty= 1,             
+                 lwd = 5,           
+                 cex=.7)
+```
+
+#### Manhattan Distance
+```{R}
+heatmap.2(cor(mat), scale="column", dendrogram = "column", labRow="", 
+          ColSideColors=cond_colors, trace='none', margins=c(7,8),
+          main='Manhattan Distance', distfun=function(x) dist(x, method = "manhattan"),
+          hclustfun = function(x) hclust(x, method = "complete"))
+
+          legend("left", 
+                 legend = unique(annotation_col$LeukemiaType),
+                 col = pal, 
+                 lty= 1,             
+                 lwd = 5,           
+                 cex=.7)
+```
+
+***
+
+### Complex Heatmap
+We will use complexheatmap to plot the entire gene expression profile of the leukemia dataset. Please pay close attention to the commented code. This section introduces the idea of $k$-means clustering in the code. I will explain $k$-means clustering after showing you how to plot the data using heatmaps. 
+
+```{r, message=F, fig.height = 6, fig.width = 8}
+set.seed(123)
+## recall our expression matrix is store as `mat`
+## and our annotations for the samples is stored 
+## under annotation_col.
+## N.B:
+## make sure rownames(annotation_col) == colnames(mat)
+
+## scale the data
+## transpose it and scale the genes (make genes the columns)
+## revert back after scaling
+mat <- t(mat)
+mat <- scale(mat, center=T)
+mat <- t(mat)
+
+
+## create the heatmap annotations using `HeatmapAnnotation`
+ha = HeatmapAnnotation(df = annotation_col, col = list(LeukemiaType = c("ALL" =  "green", "AML" = "gold", "CLL" = "red", "CML" = "blue", "NoL"= "black")), annotation_legend_param = list(title_gp = gpar(fontsize = 12, fontface = "bold"), labels_gp = gpar(fontsize = 12))) 
+
+hm <- Heatmap(
+              ## provide the gene expression matrix
+              mat, 
+              
+              ## Set the legend parameters (name, color, range, size)
+              ## we are using a zscore so a range of -3 to +3 is reasonable
+              name = "Z-score",
+              col= colorRamp2(c(-3,-1.5,0,1.5,3),c("blue","skyblue","white","lightcoral","red")),
+              heatmap_legend_param=list(at=c(-3,-1.5,0,1.5,3),color_bar="continuous", 
+                                        legend_direction="vertical", legend_height=unit(2.5,"cm"),
+                                        title_position="topcenter", title_gp=gpar(fontsize=10, fontface="bold")), 
+
+              
+              ## Row annotation configurations
+              cluster_rows=TRUE,
+              show_row_dend=FALSE,
+              row_title_side="left",
+              row_title_gp=gpar(fontsize=8),
+              show_row_names=FALSE,
+              row_names_side="right",
+              
+              ## Column annotation configuratiions
+              cluster_columns=TRUE,
+              show_column_dend=TRUE,
+              column_title="Top 1000 var genes (Z-score)",
+              column_title_side="top",
+              column_title_gp=gpar(fontsize=18, fontface="bold"),
+              show_column_names = FALSE,
+              column_names_gp = gpar(fontsize = 20, fontface="bold"),
+              
+              ## Dendrogram configurations: columns
+              clustering_distance_columns="euclidean",
+              clustering_method_columns="ward.D2",
+              column_dend_height=unit(10,"mm"),
+
+              ## Dendrogram configurations: rows
+              clustering_distance_rows="euclidean",
+              clustering_method_rows="complete",
+              row_dend_width=unit(4,"cm"),
+              row_dend_side = "left",
+              row_dend_reorder = TRUE,
+
+              ## Splits
+              ## row_km/column_km refers to value for k 
+              ## when k-means clustering is performed
+              border=T,
+              row_km = 5,
+              column_km = 5,
+              
+              ## plot params
+              width = unit(5, "inch"), 
+              height = unit(4, "inch"),
+              
+              ## if you have a small heatmap (less than 100 genes)
+              ## you might want to set show_row_names = T to show gene names
+              ## uncomment the code below to have the heatmap automatically resize to the 
+              ## number of genes in the heatmap
+              #height = unit(0.4, "cm")*nrow(mat),
+              
+              ## Annotations
+              ## provide annotations made using HeatmapAnnotations function
+              top_annotation = ha)
+
+
+draw(hm, annotation_legend_side = "right", heatmap_legend_side="right")
+```
+
+Here is some custom code for extracting the clusters defined for each column. This is useful for inspecting which samples clustered incorrectly.
+
+```{R}
+col.dend <- column_dend(hm)
+col.clst.list <- column_order(hm)
+
+set.seed(123)
+
+for (i in 1:length(col.clst.list)){
+  if (i == 1) {
+    idx <- col.clst.list[[i]]
+    clu <- t(t(colnames(mat[,idx])))
+    out <- cbind(clu, paste("cluster", i, sep=""))
+    colnames(out) <- c("Sample_ID", "Cluster")
+} else {
+    idx <- col.clst.list[[i]]
+    clu <- t(t(colnames(mat[,idx])))
+    out_tmp <- cbind(clu, paste("cluster", i, sep=""))
+    colnames(out_tmp) <- c("Sample_ID", "Cluster")
+    out <- rbind(out, out_tmp)
+  }
+}
+
+DT::datatable(out)
+
+```
+
+Inspect the table. **AML_GSM330603.CEL** and **CML_GSM331386.CEL** are the samples which have been incorrectly placed in cluster 2 based on their leukemia type label. 
+
+The same sort of clustering can be performed on the rows of the heatmap. For this tutorial I set `show_row_dend=F` to save space in the plotting window. Set the value for $k$ to your desired number and it will sort the rows into $k$ clusters. Here is some custom code for extracting clusters from the row clusters. It might be useful to run further analyses on these clusters to gain biological insight!
+```{R}
+# Credit: guidohooiveld (https://github.com/jokergoo/ComplexHeatmap/issues/136)
+
+for (i in 1:length(row_order(hm))){
+  if (i == 1) {
+    clu <- t(t(row.names(mat[row_order(hm)[[i]],])))
+    row_out <- cbind(clu, paste("cluster", i, sep=""))
+    colnames(row_out) <- c("GeneID", "Cluster")
+} else {
+    clu <- t(t(row.names(mat[row_order(hm)[[i]],])))
+    clu <- cbind(clu, paste("cluster", i, sep=""))
+    row_out <- rbind(row_out, clu)
+  }
+}
+
+DT::datatable(row_out)
+```
+
+***
+
+## K-means Clustering
+K-means clustering is one of the simplest and popular unsupervised machine learning algorithms. The objective of K-means is simple: group similar data points together and discover underlying patterns. To achieve this objective, K-means looks for a fixed number ($k$) of clusters in a dataset. The algorithm is initialized with randomly choosen $k$ centers or centroids. In a sense, a centroid is a data point with multiple values. In the case of gene expression data, it is a sample with gene expression values. In the initialization phase, those gene expression values are choosen randomly within the boundaries of the gene expression distributions from samples. As the next step in the algorithm, each sample is assigned to the closest centroid and in the next iteration centroids are set to the mean of values of the genes in the cluster. This process of setting centroids and assigning samples to the clusters repeats itself until sum of squared distances to cluster centroids is minimized.
+
+An important thing to note is the randomn initialisation of the algorithm. Depending on the dataset, you might get slightly different results for each iteration of the algorithm. A strategy to overcome this is to set a seed in R for reproducibility or better yet, perform multiple iterations to assess the stability of your clustering results. Lets use K-means clustering on the Leukemia dataset:
+```{R, message=F}
+set.seed(101)
+
+# we have to transpore the matrix t()
+# so that we calculate distances between patients
+kclu=kmeans(t(mat),centers=5)  
+
+type2kclu = data.frame(
+                    LeukemiaType =substr(colnames(mat),1,3),
+                    cluster=kclu$cluster)
+
+table(type2kclu)
+```
+
+***
+
+### Choosing a value for k{.tabset}
+Up to this point we have chosen the value for $k$ manually. Our dataset has been labelled for us so we should expect correct clustering of samples based on an intuitive value for $k$. In reality we might notice subclusters forming within our dataset, should we merge these subclusters into 1? Or should we treat them as individual clusters? This is a difficult question to answer and there are no hard and fast rules. However, there are algorithms that can help us to decide the optimal number for $k$..
+
+#### Elbow Method
+Recall that, the basic idea behind partitioning methods, such as k-means clustering, is to define clusters such that the total intra-cluster variation [total within-cluster sum of square (WSS)] is minimized. The total WSS measures the compactness of the clustering and we want it to be as small as possible.
+
+The Elbow method looks at the total WSS as a function of the number of clusters: One should choose a number of clusters so that adding another cluster doesn’t improve (reduce) the total WSS any further.
+
+The optimal number of clusters can be defined as follow:
+
+* Compute clustering algorithm (e.g., k-means clustering) for different values of k. For instance, by varying k from 1 to 10 clusters.
+
+* For each k, calculate the total within-cluster sum of square (wss).
+
+* Plot the curve of wss according to the number of clusters k.
+
+* The location of a bend (knee) in the plot is generally considered as an indicator of the appropriate number of clusters.
+
+```{R}
+library(factoextra)
+library(NbClust)
+
+# Elbow method
+fviz_nbclust(t(mat), cluster::pam, method = "wss") +
+    geom_vline(xintercept = c(3,4,5), linetype = 2)+
+  labs(subtitle = "Elbow method")
+```
+
+#### Silhoutte Method
+The silhouette method measures how similar a data point is to its own cluster compared to other clusters. Essentially, it measures the quality of clustering. That is, it determines how well each object lies within its cluster. Silhoutte values are computed as follows: For each data point $i$, we calculate ${\displaystyle a(i)}$, which denotes the average distance between $i$ and all other data points within the same cluster. This shows how well the point fits into that cluster. For the same data point, we also calculate ${\displaystyle b(i)}$. ${\displaystyle b(i)}$ denotes the lowest average distance of ${\displaystyle i}$ to all points in any other cluster, of which ${\displaystyle i}$ is not a member. The cluster with this lowest average $b(i)$ is the "neighbouring cluster" of data point ${\displaystyle i}$ since it is the next best fit cluster for that data point. Then, the silhouette value for a given data point is: 
+
+$s(i) = \frac{b(i) - a(i)}{\max\{a(i),b(i)\}}$
+
+The silhoutte value $s(i)$ is positive when $b(i)$ is high and $a(i)$ is low, meaning that the data point $i$ is self-similar to its cluster. The silhouette value $s(i)$, is negative if it is more similar to its neighbours than its assigned cluster.
+```{R}
+# Silhouette method
+fviz_nbclust(t(mat), cluster::pam, method = "silhouette")+
+  labs(subtitle = "Silhouette method")
+```
+
+
+#### Gap statistic
+Intra-cluster variation for a single cluster can simply be defined as sum of squares from the cluster mean, which in this case is the centroid we defined in the k-means algorithm. The total within-cluster variation is then sum of within-cluster variations for each cluster. This can be formally defined as follows:
+
+$\displaystyle W_k = \sum_{k=1}^K \sum_{\mathrm{x}_i \in C_k} (\mathrm{x}_i - \mu_k )^2$
+
+Where $\mathrm{x}_i$ is data point in cluster $k$, and $\mu_k$ is the cluster mean, and $W_k$ is the total within-cluster variation. The more centroids we have, the smaller the distances to the centroids get. The gap statistic compares the total within intra-cluster variation for different values of $k$ with their expected values under null reference distribution of the data (generated by sampling points from the boundaries of the original data). The estimate of the optimal clusters will be a value that maximizes the gap statistic. This means that the clustering structure is far away from the random uniform distribution of points.
+```{R}
+# Gap statistic
+# nboot = 50 to keep the function speedy. 
+# recommended value: nboot= 500 for your analysis.
+# Use verbose = FALSE to hide computing progression.
+set.seed(123)
+fviz_nbclust(t(mat), cluster::pam, method = "gap_stat", nboot = 100)+
+  labs(subtitle = "Gap statistic method")
+```
+
+***
+
+## Dimensionality Reduction 
+In statistics, dimension reduction techniques are a set of processes for reducing the number of random variables by obtaining a set of principal variables. For example, in the context of a gene expression matrix accross different patient samples, this might mean getting a set of new variables that cover the variation in sets of genes. This way samples can be represented by a couple of principal variables instead of thousands of genes. This is useful for visualization, clustering and predictive modeling.
+
+***
+
+### Principal Component Analysis
+For a nice explanation of PCA, refer to this video:
+
+[![Alt text](https://img.youtube.com/vi/FgakZw6K1QQ/0.jpg)](https://www.youtube.com/watch?v=FgakZw6K1QQ&feature=youtu.be)
+
+As mentioned in the video, PCA operates by rotating the original data such that the axes of the new coordinate system point towards the highest degree of variation. The new coordinate systems axes are termed principal components, ordered by their degree of variance they capture. The first component PC1 (x-axis), represents the direction of the highest variance of the data. The direction of the second component PC2 (y-axis), represents the highest of the remaining variance orthogonal to the first component. Lets take a look at a toy example. **We will use a scatter plot to show the expression of 2 genes from our dataset:**
+```{R, message=F}
+# create the subset of the data with two genes only
+# notice that we transpose the matrix so samples are 
+# on the columns
+sub.mat=t(mat[rownames(mat) %in% c("ENSG00000100504","ENSG00000105383"),])
+
+# ploting our genes of interest as scatter plots
+# google the gene id.. realistically we would use biomart to annotate our expression matrix
+plot(scale(mat[rownames(mat)=="ENSG00000100504",]),
+     scale(mat[rownames(mat)=="ENSG00000105383",]),
+     pch=19,
+     ylab="CD33",
+     xlab="PYGL",
+     col=annotation_col$LeukemiaType,
+     xlim=c(-2,2),ylim=c(-2,2))
+
+# create the legend for the Leukemia types
+legend("bottomright",
+       legend=unique(annotation_col$LeukemiaType),
+       fill =palette("default"),
+       border=NA,box.col=NA)
+```
+
+We will calculate the PCA with the `princomp()` function and decorate the scatter plots with eigenvectors showing the direction of greatest variation. These are automatically calculated by `princomp()` function. Be careful to scale the dataset before performing PCA, this centers the data and gives the columns a zero mean. It also divides the data by the standard deviation of the centered columns. These two operations helps bring the data to a **common scale**  which is important for PCA not to be affected by different scales in the data!
+
+```{R, message=F}
+par(mfrow=c(1,2))
+
+# create the subset of the data with two genes only
+# notice that we transpose the matrix so samples are 
+# on the columns
+sub.mat=t(mat[rownames(mat) %in% c("ENSG00000100504","ENSG00000105383"),])
+
+# ploting our genes of interest as scatter plots
+plot(scale(mat[rownames(mat)=="ENSG00000100504",]),
+     scale(mat[rownames(mat)=="ENSG00000105383",]),
+     pch=19,
+     ylab="CD33 (ENSG00000105383)",
+     xlab="PYGL (ENSG00000100504)",
+     col=annotation_col$LeukemiaType,
+     xlim=c(-2,2),ylim=c(-2,2))
+
+# create the legend for the Leukemia types
+legend("bottomright",
+       legend=unique(annotation_col$LeukemiaType),
+       fill =palette("default"),
+       border=NA,box.col=NA)
+
+# calculate the PCA only for our genes and all the samples
+pr=princomp(scale(sub.mat))
+
+
+# plot the direction of eigenvectors
+# pr$loadings returned by princomp has the eigenvectors
+arrows(x0=0, y0=0, x1 = pr$loadings[1,1], 
+         y1 = pr$loadings[2,1],col="pink",lwd=3)
+arrows(x0=0, y0=0, x1 = pr$loadings[1,2], 
+         y1 = pr$loadings[2,2],col="gray",lwd=3)
+
+
+# plot the samples in the new coordinate system
+plot(-pr$scores,pch=19,
+     col=annotation_col$LeukemiaType,
+     ylim=c(-1.5,1.5),xlim=c(-3,3))
+
+# plot the new coordinate basis vectors
+arrows(x0=0, y0=0, x1 =-2, 
+         y1 = 0,col="pink",lwd=3)
+arrows(x0=0, y0=0, x1 = 0, 
+         y1 = -1,col="gray",lwd=3)
+
+
+```
+
+By viewing PC1 and PC2, we can aready begin to see some separation in the dataset. The myeloid (AML, CML) and lymphoblastic (ALL, CLL) leukemia cells are separated by PC1.
+
+PCA in this case is obtained by calculating eigenvectors of the covariance matrix via an operation called eigen decomposition. Covariance matrix is obtained by covariance of pairwise variables of our expression matrix, which is simply ${ \operatorname{cov} (X,Y)={\frac {1}{n}}\sum _{i=1}^{n}(x_{i}-\mu_X)(y_{i}-\mu_Y)}$, where $X$ and $Y$ expression values of genes in a sample in our example. Covariance is a measure of how things vary together, if high expressed genes in sample A are also highly expressed in sample B and lowly expressed in sample A are also lowly expressed in sample B, then sample A and B will have positive covariance. If the opposite is true then they will have negative covariance. This quantity is related to correlation and in fact correlation is standardized covariance. Covariance of variables can be obtained with `cov()` function, and eigen decomposition of such a matrix will produce a set of ortahogonal vectors that span the directions of highest variation.
+
+```{r, message=F}
+cov.mat=cov(sub.mat) # calculate covariance matrix
+cov.mat
+eigen(cov.mat)
+```
+
+Eigenvectors and eigenvalues of the covariance matrix indicates the direction and the magnitute of variation of the data. In our visual example the eigenvectors are so-called principal components.
+
+Lets try plotting the principal components of every sample in our leukemia dataset using `prcomp` before introducing you to `PCAtools`. 
+```{R, message=F}
+full_pc <- prcomp(t(mat), scale. = T)
+
+plot(full_pc$x, col=annotation_col$LeukemiaType)
+
+# create the legend for the Leukemia types
+legend("topright",
+       legend=unique(annotation_col$LeukemiaType),
+       fill =palette("default"),
+       border=NA,box.col=NA)
+```
+
+Lets do the same thing using PCAtools. Note how we do not need to transform the dataframe for PCAtools, it will automatically do this for us:
+```{R, message=F}
+
+## metadata points to the annotation sample df
+## make sure your rownames(annotation_col) == colnames(mat)
+p <- pca(mat, metadata = annotation_col, scale = T)
+
+biplot(p, lab = F, legendPosition = "right", colby = "LeukemiaType")
+```
+
+We can plot a `pairsplot()` to show every combination of principal components. This is useful as we might observe a pricipal component space where Leukemia Types are well separated.. 
+```{R, message=F}
+pairsplot(p, colby="LeukemiaType", shape = "LeukemiaType")
+```
+
+***
+
+# Supervised Machine Learning
+Machine learning models are optimization methods in their core. They all depend on defining a "cost" or "loss" function to minimize. For example, in linear regression the difference between predicted and the original values are being minimized. When we have a data set with the correct answer such as original values or class labels, this is called **supervised learning**. We use the structure in the data to predict a value and optimization methods help us use the right structure or patterns in the data. The supervised machine learning methods use predictor variables such as gene expression values or other genomic scores to build a mathematical function. This function maps a predictor variable vector or matrix from a given sample to the response variable: labels/classes or numeric values. The response variable is also called "dependent variable". Then, the predictions are simply output of mathematical functions, $f(X)$. These functions take predictor variables, $X$, as input. The variables in $X$ are also called "independent variables","explanatory variables" or "features". The functions also have internal parameters that help map $X$ to the predicted values. The optimization works on the parameters of $f(X)$ and tries to minimize the difference between the function output and original response variables ($Y$): $\sum(Y-f(X))^2$. In classification problems cost functions can take different forms but the idea behind is the same. You have a mathematical expression you can minimize by searching for the optimal parameter values. The core ingredients of a machine learning algorithm are the same and they are listed as follows:
+
+* Define a prediction function or method $f(X)$.
+
+* Devise a function (called loss or cost function) to optimize the difference between your predictions and observed values, such as $\sum (Y-f(X))^2$.
+
+* Apply mathematical optimization methods to find best parameter values for $f(X)$ in relation to the cost/loss function.
+
+***
+
+## Steps in supervised learning
+There are similar steps that you will need to follow whatever machine learning model you choose to train. These steps are briefly described below:
+
+* Pre-processing data: We might have to use normalization and data transformation procedures.
+
+* Splitting the training and test data: Decide which strategy you want to use for evaluation purposes. You need to use a test set to evaluate your model later on.
+
+* Training the model: This is where your choice of supervised learning algorithm becomes relevant.“Training” generally means your data set is used in optimization of the loss function to find parameters for $f(X)$
+
+* Estimating performance of the model: This is about which metrics to use to evaluate performance and how to calculate those metrics.
+
+* Model tuning and selection: We try different parameters and select the best model.
+
+We will use the R package `caret` which contains all the functions needed to perform different types of supervised learning. 
+
+***
+
+## Dataset
+We will use the gene expression data of glioblastoma tumor samples from “The Cancer Genome Atlas” project. We will try to predict the subtype of this disease using molecular markers. This subtype is characterized by large scale epigenetic alterations called “CpG island methylator phenotype” or “CIMP”, half of the patients in our data set have this subtype and the rest do not. We will try to predict which ones have CIMP subtype. There two data objects we need for this exercise, one for gene expression values per tumor sample and the other is a metadata file containing subtype annotations per patient. In the expression data set, every row is a gene and every column corresponds to a patient sample identifier. In the metadata file the rownames correspond to the column names of the expression matrix and a subtype column identifies each patient as CIMP or noCIMP.
+
+```{r, message=F}
+# get file paths
+fileLGGexp=system.file("extdata",
+                      "LGGrnaseq.rds",
+                      package="compGenomRData")
+fileLGGann=system.file("extdata",
+                      "patient2LGGsubtypes.rds",
+                      package="compGenomRData")
+# gene expression values
+gexp=readRDS(fileLGGexp)
+head(gexp[1:3,1:5])
+
+# patient annotation
+patient=readRDS(fileLGGann)
+head(patient)
+```
+
+***
+
+## Data Pre-processing
+
+### Data Transformations
+Lets inspect the distribution of the dataset first to assess if it requires any further transformations. We can do this by plotting the first $n$ samples in the gene expression matrix using a boxplot:
+```{R, message=F}
+boxplot(gexp[,1:50],outline=F,col="cornflowerblue")
+```
+
+It appears that the data has been normalised, the mean expression values of the samples line up with eachother (the black lines in the boxplots). However the distribution tail is quite long. We can fix this by log transforming the dataset. A common transformation is to call `log2(exp + 1)` in the matrix. Lets generate some plots to test this out:
+```{R, message=F}
+par(mfrow=c(2,2))
+
+boxplot(gexp[,1:50], outline=F, col="cornflowerblue")
+title("boxplots normalised data")
+
+boxplot(log2(gexp[,1:50] +1), outline=F, col="cornflowerblue")
+title("boxplots normalised + log2 transform")
+
+hist(gexp[,5],xlab="gene expression normalised",main="",border="blue4",
+     col="cornflowerblue")
+hist(log10(gexp+1)[,5], xlab="gene expression normalised log2 scale",main="",
+     border="blue4",col="cornflowerblue")
+```
+
+The data looks much better when log2 transformed, as it now follows a normal distribution. We will log2 transform the gene expression dataset before proceeding.
+```{R}
+gexp <- as.data.frame(log2(gexp + 1))
+```
+
+Now transpose the dataset. Machine learning algorithms require the predictors (genes) to be on the columns. 
+```{R}
+gexp <- t(gexp)
+```
+
+***
+
+### Filtering the dataset
+It is useful to remove predictors which have low variance. These are genes that are not overly informative in the dataset and their inclusion in supervised learning algorithms will increase runtime. We can define a function to order the dataset by its variability and select $n$ numbers of predictors to bring forward. 
+
+Realistically this dataset could be refined by performing a differential expression test, returning a list of differentially expressed genes between CIMP and noCIMP subtypes. These genes can be used to subset the original dataset to capture relevant predictors that are highly expressed in CIMP and noCIMP respectively. Differential expression analyses are outside of this tutorials scope, so we will filter by variation instead:
+```{R, message=F}
+SDs=apply(gexp,2,sd )
+topPreds=order(SDs,decreasing = TRUE)[1:1000]
+gexp=gexp[,topPreds]
+```
+
+Lets check if our dataset is balanced:
+```{R}
+table(patient$subtype)
+```
+
+***
+
+### Scaling the dataset
+```{r}
+gexp <- scale(gexp, center=T)
+```
+
+***
+
+## Splitting the Data
+We will split 30% of the data as test, and leave the remaining 70% for training the model. This method is the gold standard for testing performance of our model. By doing this, we have a separate data set that the model has never seen. First, we need to create a single data frame with predictors and response variables. We can do this by merging the patient information with the gene expression dataset:
+```{R, message=F}
+gexp <- merge(patient,gexp,by="row.names")
+
+## remove the rownames column
+rownames(gexp) <- gexp$Row.names
+gexp <- gexp[,-c(1)]
+head(gexp[1:5,1:5])
+```
+
+Now split the dataset using `createDataPartition()`. The y variable corresponds to the response variable we added to the gene expression matrix in the previous step.
+```{R, message=F}
+set.seed(3031)
+
+# get indices for 70% of the data set
+intrain <- createDataPartition(y = gexp$subtype, p= 0.7)[[1]]
+
+# seperate test and training sets
+training <- gexp[intrain,]
+testing <- gexp[-intrain,]
+```
+
+
+***
+
+# Models
+
+## KNN
+$k$-nearest neighbours (KNN) can be used for both classification and regression predictive problems. However, in practice it is more widely used in classification problems. KNN is a non-parametric, lazy learning algorithm. Its purpose is to use a database in which the data points are separated into several classes to predict the classification of a new sample point. 
+
+Non-parametric means that the algorithm makes no assumptions about the underlying distribution of the data. The model structure is determined by the data. This is particularly useful for real-world datasets which do not obey typical assumptions e.g linearity for linear regression. Therefore, KNN should be one of the first choices for a classification study when there is little or no prior knowledge about the distribution data. KNN is also a lazy algorithm (as opposed to an eager algorithm). What this means is that it does not use the training data points to do any generalization. Lack of generalization means that KNN keeps all the training data. This is referring to the definition described above, where KNN uses a database to classify new points. Therefore all of the training data is needed during the testing phase.
+
+***
+
+### Fitting model to Train Data
+We will use `carets` `knn3()` function to perform KNN classification on the training dataset. For now I have selected `k = 5`. I will cover how to select optimal values for `k` in later sections. I have found a nice function to visually prepresent the confusion matrix from stackoverflow (https://stackoverflow.com/questions/23891140/r-how-to-visualize-confusion-matrix-using-the-caret-package). We will use this to visualise results as we progress through our models. 
+
+```{R, message=F}
+## CF function
+draw_confusion_matrix <- function(cm) {
+
+  layout(matrix(c(1,1,2)))
+  par(mar=c(2,2,2,2))
+  plot(c(100, 345), c(300, 450), type = "n", xlab="", ylab="", xaxt='n', yaxt='n')
+  title('CONFUSION MATRIX', cex.main=2)
+
+  # create the matrix 
+  rect(150, 430, 240, 370, col='#3F97D0')
+  text(195, 435, 'Class1', cex=1.2)
+  rect(250, 430, 340, 370, col='#F7AD50')
+  text(295, 435, 'Class2', cex=1.2)
+  text(125, 370, 'Predicted', cex=1.3, srt=90, font=2)
+  text(245, 450, 'Actual', cex=1.3, font=2)
+  rect(150, 305, 240, 365, col='#F7AD50')
+  rect(250, 305, 340, 365, col='#3F97D0')
+  text(140, 400, 'Class1', cex=1.2, srt=90)
+  text(140, 335, 'Class2', cex=1.2, srt=90)
+
+  # add in the cm results 
+  res <- as.numeric(cm$table)
+  text(195, 400, res[1], cex=1.6, font=2, col='white')
+  text(195, 335, res[2], cex=1.6, font=2, col='white')
+  text(295, 400, res[3], cex=1.6, font=2, col='white')
+  text(295, 335, res[4], cex=1.6, font=2, col='white')
+
+  # add in the specifics 
+  plot(c(100, 0), c(100, 0), type = "n", xlab="", ylab="", main = "DETAILS", xaxt='n', yaxt='n')
+  text(10, 85, names(cm$byClass[1]), cex=1.2, font=2)
+  text(10, 70, round(as.numeric(cm$byClass[1]), 3), cex=1.2)
+  text(30, 85, names(cm$byClass[2]), cex=1.2, font=2)
+  text(30, 70, round(as.numeric(cm$byClass[2]), 3), cex=1.2)
+  text(50, 85, names(cm$byClass[5]), cex=1.2, font=2)
+  text(50, 70, round(as.numeric(cm$byClass[5]), 3), cex=1.2)
+  text(70, 85, names(cm$byClass[6]), cex=1.2, font=2)
+  text(70, 70, round(as.numeric(cm$byClass[6]), 3), cex=1.2)
+  text(90, 85, names(cm$byClass[7]), cex=1.2, font=2)
+  text(90, 70, round(as.numeric(cm$byClass[7]), 3), cex=1.2)
+
+  # add in the accuracy information 
+  text(30, 35, names(cm$overall[1]), cex=1.5, font=2)
+  text(30, 20, round(as.numeric(cm$overall[1]), 3), cex=1.4)
+  text(70, 35, names(cm$overall[2]), cex=1.5, font=2)
+  text(70, 20, round(as.numeric(cm$overall[2]), 3), cex=1.4)
+}  
+```
+
+```{R}
+library(caret)
+
+knnFit=knn3(x=training[,-1], # training set
+            y=training$subtype, # training set class labels
+            k=5)
+# predictions on the train set
+trainPred=predict(knnFit,training[,-1], type="class")
+
+cm <- confusionMatrix(data=training$subtype,reference=trainPred)
+
+draw_confusion_matrix(cm)
+```
+
+The KNN algorithm classifies the samples with 98% accuracy. This is an excellent result! The results of our model are printed by calling `confusionMatrix()`. This is useful to see what sort of mistakes the algorithm is making. We can see that it incorrectly classified two CIMP samples as noCIMP. Note that the diagonal of a confusion matrix are the correctly labelled samples. 
+
+***
+
+### Fitting model to Test Data
+Now lets take our model generated on the training data and see how it performs on the unseen test data. 
+```{R}
+# predictions on the test set, return class labels
+testPred=predict(knnFit,testing[,-1],type="class")
+
+# compare the predicted labels to real labels
+# get different performance metrics
+cmtest <- confusionMatrix(data=testing[,1],reference=testPred)
+
+draw_confusion_matrix(cmtest)
+```
+
+The model performed very well on the test dataset with an accuracy of 96%. It made the same mistake as the training dataset, incorrectly labelling two CIMP samples as noCIMP. Models usually perform slightly worse on the test dataset, we must be careful not to overfit the model to the training dataset. 
+
+***
+
+### Model tuning
+How do we know what value to select for $k$? One straightforward way is that we can try many different $k$ values and check accuracy of our model. We will first check the effect of different $k$ on training accuracy, and then check different values of $k$ on the test data. Below, we will go through many values of $k$ and calculate the accuracy for each and plot the error vs. $k$.
+```{R, message=F}
+set.seed(11384191)
+k=1:20 # set range of k values
+trainErr=c() # set vector for training errors
+
+## calculate error on training data
+for( i in k){
+  
+  knnFit=knn3(x=training[,-1], # training set
+              y=training[,1], # training set class labels
+              k=i)
+
+  # predictions on the training set
+  class.res=predict(knnFit,training[,-1],type="class")
+
+  # training error
+  err=1-confusionMatrix(training[,1],class.res)$overall[1]
+  trainErr[i]=err
+}
+
+## calculate error on test data
+testErr=c()
+for( i in k){
+
+  knnFit=knn3(x=training[,-1], # training set
+              y=training[,1], # training set class labels
+              k=i)
+
+  # predictions on the training set
+  class.res=predict(knnFit,testing[,-1],type="class")
+  
+  # test err
+  err=1-confusionMatrix(testing[,1],class.res)$overall[1]
+  testErr[i]=err
+}
+
+## now plot them using k and the testErr and trainErr vectors
+# plot training error
+plot(k,trainErr,type="p",col="#CC0000",
+     ylim=c(0.000,0.08),
+     ylab="prediction error (1-accuracy)",pch=19)
+# add a smooth line for the trend
+lines(loess.smooth(x=k, trainErr,degree=2), col="#CC0000")
+
+# plot test error
+points(k,testErr,col="#00CC66",pch=19) 
+lines(loess.smooth(x=k,testErr,degree=2), col="#00CC66")
+# add legend
+legend("bottomright",fill=c("#CC0000","#00CC66"),
+       legend=c("training","test"),bty="n")
+```
+
+We can see that low values for $k$ reduce the prediction error of the training model. However, setting low values for $k$ results in a model that aggressively tries to fit each point of the training data into the correct class. This will result in a high accuracy for the training data, but it will not perform well on unseen test data. It might be slightly counter intuitive, but we will want to set $k$ to a higher value so our model takes into account more neighbouring points when it makes a decision on an unseen point. This will result in a smoother decision boundary that can generalise well when applied to unseen data. 
+
+***
+
+### Cross Validation
+Cross-validation works by splitting the data into randomly sampled $k$ subsets, called k-folds (not to be confused with $k$ in KNN). For example, in the case of 5-fold cross-validation with 100 data points, we would create 5 folds each containing 20 data points. We would then build models and estimate errors 5 times. Each time four of the groups are combined (resulting in 80 data points) and used to train your model. Then the 5th group of 20 points that was not used to construct the model is used to estimate the test error. In the case of 5-fold cross-validation, we would have 5 error estimates that could be averaged to obtain a more robust estimate of the test error.
+
+Use 10-fold CV and a tuning grid spanning from 1 - 8 for different values of $k$ to test. We will plot the prediction error vs. $k$ to chekc the optimal value for $k$. 
+```{r, message=F}
+set.seed(17)
+# this method controls everything about training
+# we will just set up 10-fold cross validation
+trctrl <- trainControl(method = "cv",number=10)
+
+# we will now train k-NN model
+knn_fit <- train(subtype~., data = training, 
+                 method = "knn",
+                 trControl=trctrl,
+                 tuneGrid = data.frame(k=1:10))
+
+# plot k vs prediction error
+plot(x=1:10,1-knn_fit$results[,2],pch=19,
+     ylab="prediction error",xlab="k")
+lines(loess.smooth(x=1:10,1-knn_fit$results[,2],degree=2),
+      col="#CC0000")
+```
+
+$K$ = 5 was a good choice to start with.
+
+***
+
+## Logistic Regression
+Logistic regression is a statistical method that is used to model a binary response variable based on predictor variables. Although initially devised for two-class or binary response problems, this method can be generalized to multiclass problems. Logistic regression is very similar to the linear regression as a concept and it can be thought of as a “maximum likelihood estimation” problem where we are trying to find statistical parameters that maximizes the likelihood of the observed data being sampled from the statistical distribution of interest. This is also related to the general cost/loss function approach we see in supervised machine learning algorithms. In the case of binary response variables, a simple linear regression model, such as $y_i \sim \beta _{0}+\beta _{1}x_i$ is a poor choice as $y_i$ can generate values outside of 0 and 1. 
+
+We need a model that restricts the upper bound of $y_i$ to 1 and the lower bound to 0. We can formulate $y_i$ as a realization of a random variable that can take the values one and zero with probabilities $p_i$ and $1-{p_i}$, respectively. This random variable follows the Bernoulli distribution, and instead of predicting the binary variable we can formulate the problem as $p_i \sim \beta _{0}+\beta _{1}x_i$. However, our initial problem still stands, simple linear regression will still result in values that are beyond 0 and 1 boundary. A model that satisfies the boundary requirement is the logistic equation shown below:
+
+$$
+{\displaystyle p_i={\frac {e^{(\beta _{0}+\beta _{1}x_i)}}{1+e^{(\beta _{0}+\beta_{1}x_i)}}}}
+$$
+
+This equation can be linearized by the following transformation
+
+$$
+{\displaystyle \operatorname{logit} (p_i)=\ln \left({\frac {p_i}{1-p_i}}\right)=\beta _{0}+\beta _{1}x_i}
+$$
+
+The left-hand side is termed the logit, which stands for “logistic unit.” It is also known as the log odds. In this case, our model will produce values on the log scale and with the logistic equation above, we can transform the values to 0-1 range. Within the maximum likelihood framework, the best parameter estimates are the ones that maximizes the likelihood of the statistical model actually producing the observed data. You can think of this fitting a probability distribution to an observed data set. The parameters of the probability distribution should maximize the likelihood that the observed data came from the distribution in question. 
+
+In logistic regression, the response variable is modeled with a binomial distribution or its special case Bernoulli distribution. The value of each response variable $y_i$ is 0 or 1, and we need to figure out parameter $p_i$  values that could generate such a distribution of 0s and 1s. If we can find the best  $p_i$  values for each sample $i$ we would be maximizing the log-likelihood function of the model over the observed data. The maximum log-likelihood function for our binary response variable case is:
+
+$$
+ \operatorname{\ln} (L)=\sum_{i=1}^N\bigg[{\ln(1-p_i)+y_i\ln \left({\frac {p_i}{1-p_i}}\right)\bigg]}
+$$
+
+In order to maximize this equation we have to find optimum  $p_i$ values which are dependent on parameters $\beta_0$ and $\beta_1$ and also dependent on the values of predictor variables  $x_i$. We can rearrange the equation replacing  $p_i$ with the logistic equation. In addition, many optimization functions minimize rather than maximize. Therefore, we will be using negative log likelihood, this also called “log loss” or “logistic loss” function. The function below is the “log loss” function. We substituted  $p_i$ with the logistic equation and simplified the expression.
+
+$$
+\operatorname L_{log}=-{\ln}(L)=-\sum_{i=1}^N\bigg[-{\ln(1+e^{(\beta _{0}+\beta _{1}x_i)})+y_i \left(\beta _{0}+\beta _{1}x_i\right)\bigg]}
+$$
+
+***
+
+### Train model using logistic regression
+Apologies for the error messages, but I am showing you a bad model, these messages are inevitable. . .
+```{R, message = F}
+trctrl <- trainControl(method = "cv",number=10)
+
+lrFit <- train(subtype ~ .,  
+                data=training, 
+                # no model tuning with sampling
+                trControl=trctrl,
+                method="glm", family="binomial",
+                maxit = 200, trace=F)
+
+# training accuracy 
+class.res=predict(lrFit,training[,-1])
+cm <- confusionMatrix(training[,1],class.res)
+
+class.res=predict(lrFit,testing[,-1])
+cm1 <- confusionMatrix(testing[,1],class.res)
+
+draw_confusion_matrix(cm)
+draw_confusion_matrix(cm1)
+```
+
+We can see that the model has been overfit to the training data with a perfect 100% accuracy, whilst performing dismally on the test dataset. It performs worse that an randomn guess. Lets look into how we can overcome this overfitting.. 
+
+***
+
+## Regularization
+The standard linear model performs poorly in a situation, where you have a large multivariate data set containing a larger proportion of variables to the number of samples. This was evident in the previous model where test accuracy was comically bad. A better alternative is the penalized regression allowing to create a linear/logistic regression model that is penalized, for having too many variables in the model, by adding a constraint in the equation . This is also known as shrinkage or regularization.
+
+The consequence of imposing this penalty, is to reduce (i.e. shrink) the coefficient values towards zero. This allows the less contributive variables to have a coefficient close to zero or equal zero. Note that the shrinkage requires the selection of a tuning parameter $\lambda$ that determines the amount of shrinkage.
+
+I will describe at a high level the most commonly used penalized regression methods, including ridge regression, lasso regression and elastic net regression.
+
+***
+
+### Ridge Regression
+Ridge regression shrinks the regression coefficients, so that variables, with minor contribution to the outcome, have their coefficients close to zero. The shrinkage of the coefficients is achieved by penalizing the regression model with a penalty term called **L2-norm**, which is the sum of the squared coefficients. The amount of the penalty can be fine-tuned using a constant called lambda $\lambda$. Selecting a good value for $\lambda$ is critical.
+
+When $\lambda = 0$, the penalty term has no effect, and ridge regression will produce the classical least square coefficients. However, as $\lambda$ increases, the impact of the shrinkage penalty grows, and the ridge regression coefficients will get closer to zero.
+
+Note: Ridge regression is sensitive to the scale of the predictors, thus it is mandatory to scale your dataset before attempting to perform ridge regression. One important advantage of ridge regression is that it still performs well when compared to the ordinary least square method in a situation where you have a large multivariate data with the number of predictors larger than the number of samples. One disadvantage of the ridge regression is it will include all the predictors in the final model.
+
+***
+
+### LASSO Regression
+Lasso stands for Least Absolute Shrinkage and Selection Operator. It shrinks the regression coefficients toward zero by penalizing the regression model with a penalty term called **L1-norm**, which is the sum of the absolute coefficients. In lasso regression, the penalty has the effect of forcing some of the coefficient estimates, **with a minor contribution to the model**, to be exactly equal to zero. Essetially, lasso will discard predictors it finds to be useless in the models prediction. Lasso is useful for returning simpler, interpretable models. As is the case for ridge regression, selecting a good value of $\lambda$ for the model is critical.
+
+***
+
+### Elastic Net Regression
+Elastic net regression combines both L1 and L2 penalties to get the best of both worlds. It still uses $\lambda$ to control the weight given to the penalty, and has an extra parameter $\alpha$ which decides the weight given to L1 or L2 norm. Therefore it makes sense to test multiple values of both using a grid search. We will use `method = "glmnet"` to tell `caret` we want to use Ridge/LASSO/elastic net, which one is used depends on $\lambda$ values (for Ridge/LASSO), including $\alpha$ lets caret know we are using an elastic net.
+
+```{R}
+# Build the model using the training set
+set.seed(123)
+elnFit <- train(subtype~., data = training,
+                method = "glmnet",
+                trControl = trainControl("cv", number = 10),
+                # alpha and lambda paramters to try
+                 tuneGrid = data.frame(alpha=seq(0.1,0.7,0.05),
+                                       lambda=seq(0.1,0.7,0.05)))
+# Best tuning parameter
+#elnFit$bestTune
+
+class.res=predict(elnFit,training[,-1])
+cm <- confusionMatrix(training[,1],class.res)
+
+class.res=predict(elnFit,testing[,-1])
+cm1 <- confusionMatrix(testing[,1],class.res)
+
+draw_confusion_matrix(cm)
+draw_confusion_matrix(cm1)
+```
+
+***
+
+## Random Forest
+Before explaining Random forests, we will need to cover decision trees. I will use the Iris dataset to illustrate the decision making process (which is highly interpretable) behind decision trees. The goal of decision trees is to partition the dataset into subsets so that the outcomes in each final sub-space is as homogeneous as possible. Here is a visual representation:
+
+```{R}
+model <- rpart(Species ~., data = iris)
+par(xpd = NA)
+fancyRpartPlot(model)
+```
+
+The example above represents a tree model predicting the species of iris flower based on the length and width of sepal and petal. Its first split was based on petal length, as this is the variable most highly correlated with the outcome variable. The process continues until some predetermined stopping criteria are met, the most obvious being all nodes are homogenous i.e they have correctly 'binned' all outcome variables into separate nodes. 
+
+In classification settings, the split point is defined so that the population in subpartitions are pure as much as possible. We will be using the *Gini Index* (here $K$ refers to the number of classes):
+
+$$
+{\displaystyle {I}_{G}(p)=\sum _{i=1}^{K}p_{i}(1-p_{i})=\sum _{i=1}^{K}p_{i}-\sum _{i=1}^{K}{p_{i}}^{2}=1-\sum _{i=1}^{K}{p_{i}}^{2}}
+$$
+
+Lets manually check the Gini index for the first node in the tree above:
+```{R}
+total <- nrow(iris)
+n_below <- sum(iris$Petal.Length < 2.5)
+n_above <- sum(iris$Petal.Length > 2.5)
+
+paste0("Total samples in Iris dataset: ", total)
+paste0("Total samples Petal Len < 2.5: ", n_below)
+paste0("Total Samples Petal Len > 2.5: ", n_above)
+impurity <- (1 - ((n_below/total)^2 + (n_above/total)^2))
+paste0("Gini index node 1: (1 - ((50/150)^2 + (100/150)^2)) = ", impurity)
+print("Total samples at node 2 (lhs setosa): 50")
+impurity1 <- (1 - (50/50)^2)
+paste0("Gini index node 2 (lhs setosa): (1 - (50/50)^2) = ", impurity1)
+```
+
+Despite their advantages, decision trees tend to overfit if they are grown very deep and can learn irregular patterns. Random forests are devised to counter the short comings of decision trees. They are simply ensembles of decision trees. Each tree is trained with a different randomly selected part of the data with randomly selected predictor variables. The goal of introducing randomness is to reduce the variance of the model so it does not overfit, with the expense of a small increase in the bias and some loss of interpretability. This strategy generally boosts the performance of the final model. The random forests algorithm tries to decorrelate the trees so that they learn different things about the data. It does this by selecting a random subset of variables. If one or a few predictor variables are very strong predictors for the response variable, these features will be selected in many of the trees, causing them to become correlated. By random subsampling of predictor variables it ensures that not always the best predictors overall will be selected for every tree and the model has a chance to learn other features of the data.
+
+We will use the `caret::train()` function and specify `method = "ranger"` to use a random forest. For the tuning grid we will set `mtry` to 100. Explanation of `mtry`: When forming each split in a tree, the algorithm randomly selects `mtry` variables from the set of predictors available. Hence when forming each split a different random set of variables is selected within which the best split point is chosen. We set `min.node.size=1` = 1. The min node size refers to the terminal node size, hence for a classification problem, we will want to set this to 1. `Splitrule` use Gini as described above. We will also ask the model to calculate variable importance using `importance = "permutation". 
+```{R}
+# RF code 
+library(kernlab)
+set.seed(17)
+
+# we will just set up 5-fold cross validation
+trctrl <- trainControl(method = "cv",number=10)
+
+# we will now train random forest model
+rfFit <- train(subtype~., 
+               data = training, 
+               method = "ranger",
+               trControl=trctrl,
+               importance="permutation", # calculate importance
+               tuneGrid = data.frame(mtry=100,
+                                     min.node.size = 1,
+                                     splitrule="gini"))
+
+trainPred=predict(rfFit,training[,-1])
+
+cm <- confusionMatrix(data=training$subtype,reference=trainPred)
+
+# predictions on the test set, return class labels
+testPred=predict(rfFit,testing[,-1])
+
+# compare the predicted labels to real labels
+# get different performance metrics
+cm1 <- confusionMatrix(data=testing[,1],reference=testPred)
+
+draw_confusion_matrix(cm)
+draw_confusion_matrix(cm1)
+```
