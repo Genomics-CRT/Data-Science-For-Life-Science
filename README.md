@@ -106,6 +106,7 @@ This tutorial is split into 3 parts and covers:
 ## Week 6 (18/05/2020)
 
 #### Machine Learning (R) 
+Distance metrics, clustering methods in unsupervised machine learning, visualised as dendograms and heatmaps. Dimensionality reduction using PCA, visualising Principal components in bi plots. Supervised machine learning covering data pre-processing and cleaning, creating training and test sets and implementing KNN, RF and Elastic net machine learning models. 
 
 #### Machine Learning (Python)
 
