@@ -1,0 +1,360 @@
+---
+title: "Week 6 Worksheet"
+author: "Barry"
+date: "15/05/2020"
+output: html_document
+---
+
+# Introduction
+For this weeks worksheet I have tried my best to present you with a 'real' large omics dataset. We are going to a breast cancer dataset, GSE81538 from the GEO database. The study was conducted by the Population-Based Multicenter Sweden Cancerome Analysis Network—Breast Initiative. I have pre-filtered the dataset to contain only Basal and Her2 breast cancer subtypes, per pam50 subtye classification. 
+
+#### Load Libraries:
+```{R, echo = F, message=F}
+library(knitr)
+library(gplots)
+library(ggplot2)
+library(RColorBrewer)
+library(NbClust)
+library(factoextra)
+library(PCAtools)
+library(caret)
+library(ComplexHeatmap)
+library(circlize)
+library(kernlab)
+library(glmnet)
+```
+
+
+# Part 1: Read in Data
+a) Read in the gene expression and metadata file. (hint: set row.names = "Gene" for expression file and row.names = "Sample_ID" for the metadata file)
+```{R}
+mat <- read.csv("~/Desktop/CRT_ML/files/GSE96058.gene_expr.csv", header=T, row.names = "Gene", sep=",")
+meta <- read.csv("~/Desktop/CRT_ML/files/GSE96058.metadata.csv", header=T, row.names = "Sample_ID", sep=",")
+```
+
+b) Using `table()`, check the number of subtypes present in the metadata file
+```{R}
+table(meta$Subtype)
+```
+
+# Part 2: Pre Process Data
+a) Check the distribution of expression values for the first 20 samples. Please use a boxplot.
+```{R}
+boxplot(mat[,1:20], outline=F, col="skyblue")
+```
+b) Check the distribution of 4 samples individually by using a histogram. To render 4 plots to one graphics device, call `par(mfrow=c(2,2))` at the beginning of the code block.
+```{R}
+par(mfrow=c(2,2))
+
+hist(mat[,1], col="skyblue")
+hist(mat[,2], col="skyblue")
+hist(mat[,3], col="skyblue")
+hist(mat[,4], col="skyblue")
+```
+
+What can we say about the distribution of the gene expression values? Do you think it follows a normal distribution?
+
+Do you think that the data requires any transformations? If so, check the distribution of the histograms by calling `hist(log2(mat[,1] +1))` to see the effect of a log2 transformation. Which one is skewed? 
+
+c) Scale and center the dataset by using the base R function. Recall the `scale()` function operates on columns. We want to scale the genes.
+```{R}
+mat <- t(mat)
+mat <- scale(mat, center = T)
+mat <- t(mat)
+```
+
+d) Subset the dataset to extract the top 2000 variable genes. Take into consideration that the genes are on the rows of the gene expression matrix. When using the `apply()` function change it to `apply(mat,1,sd)`, which differs from the `apply(mat,2,sd)` call made in the learning materials. Can you see why we did this? Look up the documentation of `apply()` to see why. When subsetting the gene expression matrix, remember to subset by rows not columns. 
+```{R}
+SDs=apply(mat,1,sd )
+topPreds=order(SDs,decreasing = TRUE)[1:2000]
+mat=mat[topPreds,]
+```
+
+# Part 3: Heatmaps/PCA
+a) Using `heatmap.2` and a distance + clustering method of your choice, generate sample to sample heatmaps of the dataset.
+Consult the learning materials for multiple examples. Ignore the error message about the color palette if produced.
+```{R}
+## set the color palette
+num_conditions <- nlevels(meta$Subtype)
+pal <- colorRampPalette(brewer.pal(num_conditions, "Set1"))(num_conditions)
+cond_colors <- pal[as.integer(meta$Subtype)]
+
+heatmap.2(cor(mat), scale="column", dendrogram = "column", labRow="", 
+          ColSideColors=cond_colors, trace='none', margins=c(7,8),
+          main='Correlation Distance', distfun=function(x) as.dist(1-cor(t(x))),
+          hclustfun = function(x) hclust(x, method = "ward.D2"))
+
+          legend("left", 
+                 legend = unique(meta$Subtype),
+                 col = pal, 
+                 lty= 1,             
+                 lwd = 5,           
+                 cex=.7)
+```
+b) Produce a PCA plot using PCAtools. PC1 vs. PC2 should suffice. 
+```{R}
+p <- pca(mat, metadata = meta)
+
+biplot(p, lab=F, colby = "Subtype", legendPosition = "right")
+```
+c) Using complex heatmap, produce a heatmap of the expression patterns of the samples. 
+Note: set k = 2 for row clustering. 
+Hint : col=colorRamp2(c(-4,-2,0,2,4), c("green", "green4", "black", "red4", "red")) renders a better image
+```{R}
+## N.B:
+## make sure rownames(annotation_col) == colnames(mat)
+
+
+## create the heatmap annotations using `HeatmapAnnotation`
+ha = HeatmapAnnotation(df = meta, col = list(Subtype = c("Her2" = "gold", "Basal" = "blue")), annotation_legend_param = list(title_gp = gpar(fontsize = 12, fontface = "bold"), labels_gp = gpar(fontsize = 12))) 
+
+hm <- Heatmap(
+              ## provide the gene expression matrix
+              mat, 
+              
+              ## Set the legend parameters (name, color, range, size)
+              ## we are using a zscore so a range of -3 to +3 is reasonable
+              name = "Z-score",
+              col=colorRamp2(c(-4,-2,0,2,4), c("green", "green4", "black", "red4", "red")),
+             # col= colorRamp2(c(-3,-1.5,0,1.5,3),c("blue","skyblue","white","lightcoral","red")),
+              heatmap_legend_param=list(at=c(-3,-1.5,0,1.5,3),color_bar="continuous", 
+                                        legend_direction="vertical", legend_height=unit(2.5,"cm"),
+                                        title_position="topcenter", title_gp=gpar(fontsize=10, fontface="bold")), 
+
+              
+              ## Row annotation configurations
+              cluster_rows=TRUE,
+              show_row_dend=TRUE,
+              row_title_side="left",
+              row_title_gp=gpar(fontsize=8),
+              show_row_names=FALSE,
+              row_names_side="right",
+              
+              ## Column annotation configuratiions
+              cluster_columns=TRUE,
+              show_column_dend=TRUE,
+              column_title="Top 1000 var genes (Z-score)",
+              column_title_side="top",
+              column_title_gp=gpar(fontsize=18, fontface="bold"),
+              show_column_names = FALSE,
+              column_names_gp = gpar(fontsize = 20, fontface="bold"),
+              
+              ## Dendrogram configurations: columns
+              clustering_distance_columns="euclidean",
+              clustering_method_columns="ward.D2",
+              column_dend_height=unit(10,"mm"),
+
+              ## Dendrogram configurations: rows
+              clustering_distance_rows="euclidean",
+              clustering_method_rows="ward.D2",
+              row_dend_width=unit(2,"cm"),
+              row_dend_side = "left",
+              row_dend_reorder = TRUE,
+
+              ## Splits
+              ## row_km/column_km refers to value for k 
+              ## when k-means clustering is performed
+              border=T,
+              row_km = 2,
+              column_km = 1,
+              
+              ## plot params
+              width = unit(5, "inch"), 
+              height = unit(4, "inch"),
+              
+              ## if you have a small heatmap (less than 100 genes)
+              ## you might want to set show_row_names = T to show gene names
+              ## uncomment the code below to have the heatmap automatically resize to the 
+              ## number of genes in the heatmap
+              #height = unit(0.4, "cm")*nrow(mat),
+              
+              ## Annotations
+              ## provide annotations made using HeatmapAnnotations function
+              top_annotation = ha)
+
+
+draw(hm, annotation_legend_side = "right", heatmap_legend_side="right")
+```
+
+
+# Part 4: Prepare Data for models
+
+a) Format the gene expression matrix to include subtype information:
+
+* Firstly, transpose the matrix so genes are on the columns
+
+* Using `merge()`, join the gene expression matrix and metadate file by "row.names"
+
+* remove the left over "Row.names" column, it should be the 1st or 2nd column. 
+```{R}
+mat <- t(mat)
+
+mat <- merge(meta,mat,by="row.names")
+
+## remove the rownames column
+rownames(mat) <- mat$Row.names
+mat <- mat[,-c(1)]
+head(mat)
+```
+
+b) split into training and test data (70% - 30% split)
+```{R}
+# get indices for 70% of the data set
+intrain <- createDataPartition(y = mat$Subtype, p= 0.7)[[1]]
+
+# seperate test and training sets
+training <- mat[intrain,]
+testing <- mat[-intrain,]
+```
+
+# Part 5: Choose models
+Run this block of code to generate tidy confusion matrix:
+```{R, echo=F, message=F}
+draw_confusion_matrix <- function(cm) {
+
+  layout(matrix(c(1,1,2)))
+  par(mar=c(2,2,2,2))
+  plot(c(100, 345), c(300, 450), type = "n", xlab="", ylab="", xaxt='n', yaxt='n')
+  title('CONFUSION MATRIX', cex.main=2)
+
+  # create the matrix 
+  rect(150, 430, 240, 370, col='#3F97D0')
+  text(195, 435, 'Class1', cex=1.2)
+  rect(250, 430, 340, 370, col='#F7AD50')
+  text(295, 435, 'Class2', cex=1.2)
+  text(125, 370, 'Predicted', cex=1.3, srt=90, font=2)
+  text(245, 450, 'Actual', cex=1.3, font=2)
+  rect(150, 305, 240, 365, col='#F7AD50')
+  rect(250, 305, 340, 365, col='#3F97D0')
+  text(140, 400, 'Class1', cex=1.2, srt=90)
+  text(140, 335, 'Class2', cex=1.2, srt=90)
+
+  # add in the cm results 
+  res <- as.numeric(cm$table)
+  text(195, 400, res[1], cex=1.6, font=2, col='white')
+  text(195, 335, res[2], cex=1.6, font=2, col='white')
+  text(295, 400, res[3], cex=1.6, font=2, col='white')
+  text(295, 335, res[4], cex=1.6, font=2, col='white')
+
+  # add in the specifics 
+  plot(c(100, 0), c(100, 0), type = "n", xlab="", ylab="", main = "DETAILS", xaxt='n', yaxt='n')
+  text(10, 85, names(cm$byClass[1]), cex=1.2, font=2)
+  text(10, 70, round(as.numeric(cm$byClass[1]), 3), cex=1.2)
+  text(30, 85, names(cm$byClass[2]), cex=1.2, font=2)
+  text(30, 70, round(as.numeric(cm$byClass[2]), 3), cex=1.2)
+  text(50, 85, names(cm$byClass[5]), cex=1.2, font=2)
+  text(50, 70, round(as.numeric(cm$byClass[5]), 3), cex=1.2)
+  text(70, 85, names(cm$byClass[6]), cex=1.2, font=2)
+  text(70, 70, round(as.numeric(cm$byClass[6]), 3), cex=1.2)
+  text(90, 85, names(cm$byClass[7]), cex=1.2, font=2)
+  text(90, 70, round(as.numeric(cm$byClass[7]), 3), cex=1.2)
+
+  # add in the accuracy information 
+  text(30, 35, names(cm$overall[1]), cex=1.5, font=2)
+  text(30, 20, round(as.numeric(cm$overall[1]), 3), cex=1.4)
+  text(70, 35, names(cm$overall[2]), cex=1.5, font=2)
+  text(70, 20, round(as.numeric(cm$overall[2]), 3), cex=1.4)
+}  
+```
+
+a) Before running a KNN model using `knn3()`, use `carets` `train()` function with method = "knn" and use Cross fold validation + tuning grid to plot the error rate vs. values for k in the training set.
+```{R}
+set.seed(969)
+trctrl <- trainControl(method = "cv",number=10)
+
+# we will now train k-NN model
+knn_fit <- train(Subtype~., data = training, 
+                 method = "knn",
+                 trControl=trctrl,
+                 tuneGrid = data.frame(k=1:15))
+
+# plot k vs prediction error
+plot(x=1:15,1-knn_fit$results[,2],pch=19,
+     ylab="prediction error",xlab="k")
+lines(loess.smooth(x=1:15,1-knn_fit$results[,2],degree=2),
+      col="#CC0000")
+```
+
+b) Now use the optimal value for K in your KNN model
+```{R}
+knnFit=knn3(x=training[,-1], # training set
+            y=training$Subtype, # training set class labels
+            k=7)
+# predictions on the train set
+trainPred=predict(knnFit,training[,-1], type="class")
+
+cm <- confusionMatrix(data=training$Subtype,reference=trainPred)
+
+draw_confusion_matrix(cm)
+# predictions on the test set, return class labels
+testPred=predict(knnFit,testing[,-1],type="class")
+
+# compare the predicted labels to real labels
+# get different performance metrics
+confusionMatrix(data=testing[,1],reference=testPred)
+
+cm1 <- confusionMatrix(data=testing[,1],reference=testPred)
+
+draw_confusion_matrix(cm1)
+```
+
+c) Use an Elastic net model on the training and test data. Use cross fold validation and a tuning grid for optimal values for lambda and alpha.
+```{R}
+elnFit <- train(Subtype~., data = training,
+                method = "glmnet",
+                trControl = trainControl("cv", number = 10),
+                # alpha and lambda paramters to try
+                 tuneGrid = data.frame(alpha=seq(0.1,0.7,0.05),
+                                       lambda=seq(0.1,0.7,0.05)))
+# Best tuning parameter
+#elnFit$bestTune
+
+train_pred=predict(elnFit,training[,-1], type="raw")
+cm <- confusionMatrix(training[,1], reference = train_pred)
+
+test_pred=predict(elnFit,testing[,-1], type="raw")
+cm1 <- confusionMatrix(testing[,1],reference = test_pred)
+
+
+draw_confusion_matrix(cm)
+draw_confusion_matrix(cm1)
+```
+
+d) Use a Random Forest model on the training and test data. Use cross fold validation in the model.
+```{R}
+trctrl <- trainControl(method = "cv",number=10)
+
+# we will now train random forest model
+rfFit <- train(Subtype~., 
+               data = training, 
+               method = "ranger",
+               trControl=trctrl,
+               importance="permutation", # calculate importance
+               tuneGrid = data.frame(mtry=100,
+                                     min.node.size = 1,
+                                     splitrule="gini"))
+
+trainPred=predict(rfFit,training[,-1])
+
+cm <- confusionMatrix(data=training$Subtype,reference=trainPred)
+
+# predictions on the test set, return class labels
+testPred=predict(rfFit,testing[,-1])
+
+# compare the predicted labels to real labels
+# get different performance metrics
+cm1 <- confusionMatrix(data=testing[,1],reference=testPred)
+
+draw_confusion_matrix(cm)
+draw_confusion_matrix(cm1)
+```
+
+e) *bonus* look up the documentation for carets `resamples()` function (hint: F1 to view help, specifically at the very bottom of the page). Use `dotplot()` on the `resamps` variable you made.
+```{R}
+resamps <- resamples(list(RandomForest = rfFit,
+                          ElasticNet = elnFit,
+                          KNN = knn_fit))
+
+dotplot(resamps)
+```
+
